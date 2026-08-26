@@ -1,0 +1,25 @@
+{
+  "name": "quiz-video",
+  "version": "1.0.0",
+  "description": "Remotion-based YouTube quiz video generator",
+  "type": "module",
+  "scripts": {
+    "start": "npx remotion studio",
+    "build": "npx remotion render QuizVideo out/quiz.mp4",
+    "render": "npx remotion render",
+    "upgrade": "npx remotion upgrade"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.273",
+    "@remotion/google-fonts": "^4.0.273",
+    "@remotion/tailwind-v4": "4.0.273",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "4.0.273"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.4.5"
+  }
+}

@@ -24,7 +24,8 @@ const REVEAL_SECONDS = 3;
 const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6'];
 
 function getQuestionDuration(q: QuizQuestion): number {
-  const media = Math.min(q.mediaDuration || 0, 20);
+  const role = q.mediaRole || 'clue';
+  const media = role === 'clue' ? Math.min(q.mediaDuration || 0, 20) : 0;
   return (media + q.timeLimit + REVEAL_SECONDS) * FPS;
 }
 

@@ -15,8 +15,9 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const mediaRole = question.mediaRole || 'clue';
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
-  const mediaFrames = mediaDuration * fps;
+  const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0;
   const isMediaPhase = frame < mediaFrames;
   const quizFrame = Math.max(0, frame - mediaFrames);
 
@@ -66,10 +67,10 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
           position: 'relative',
         }}>
           {/* Play audio — supports mp4 (video as audio), mp3, any format */}
-          {question.mediaUrl && isMediaPhase && (
+          {question.mediaUrl && (
             question.mediaUrl.endsWith('.mp3') || question.mediaUrl.endsWith('.wav') || question.mediaUrl.endsWith('.ogg')
-              ? <Audio src={question.mediaUrl} startFrom={0} endAt={mediaFrames} volume={1} />
-              : <Video src={question.mediaUrl} style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }} startFrom={0} endAt={mediaFrames} volume={1} />
+              ? <Audio src={question.mediaUrl} startFrom={0} volume={isMediaPhase ? 1 : 0} />
+              : <Video src={question.mediaUrl} style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }} startFrom={0} volume={isMediaPhase ? 1 : 0} />
           )}
           {/* Waveform bars */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 200 }}>
@@ -103,10 +104,13 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
           </span>
         </div>
 
-        {/* OPTIONS — same as QuestionPlay */}
+        {/* OPTIONS — hidden during clue media phase */}
         <div style={{
           flex: 1, display: 'flex', flexDirection: 'column',
           gap: 24, padding: '10px 0', justifyContent: 'center',
+          opacity: isMediaPhase ? 0 : 1,
+          transform: isMediaPhase ? 'translateX(40px)' : 'translateX(0)',
+          transition: 'opacity 0.3s, transform 0.3s',
         }}>
           {question.options.map((option, i) => {
             const delay = 5 + i * 3;

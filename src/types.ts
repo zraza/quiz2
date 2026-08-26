@@ -10,8 +10,14 @@ export interface BaseQuestion {
   correctAnswer: string;
   /** URL to video/audio to play before timer starts (mp4, mp3, etc.) */
   mediaUrl?: string;
-  /** How long to play the media in seconds (max 20) */
+  /** How long to play the media in seconds (max 20). Only used when mediaRole='clue'. */
   mediaDuration?: number;
+  /** 'cover' = fill parent, crop edges. 'contain' = show whole video, letterbox. Default: 'cover' */
+  mediaFit?: 'cover' | 'contain';
+  /** 'clue' = media plays first, options appear after, timer starts after. 
+   *  'ambient' = media plays alongside options, just visual enhancement, timer starts immediately.
+   *  Default: 'clue' */
+  mediaRole?: 'clue' | 'ambient';
 }
 
 export interface SimpleQuestion extends BaseQuestion {

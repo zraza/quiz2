@@ -17,8 +17,9 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   const { fps } = useVideoConfig();
 
   const options = 'options' in question ? question.options : [];
+  const mediaRole = question.mediaRole || 'clue';
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
-  const mediaFrames = mediaDuration * fps;
+  const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0; // ambient = no delay
   const isMediaPhase = frame < mediaFrames;
   const quizFrame = Math.max(0, frame - mediaFrames); // frame relative to quiz start
 
@@ -92,10 +93,14 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           {question.mediaUrl ? (
             <Video
               src={question.mediaUrl}
-              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              style={{
+                position: 'absolute', inset: 0, width: '100%', height: '100%',
+                objectFit: question.mediaFit || 'cover',
+                background: '#000',
+              }}
               volume={isMediaPhase ? 1 : 0}
               startFrom={0}
-              endAt={mediaFrames}
+              pauseWhenBuffering
             />
           ) : (
             <div style={{
@@ -109,7 +114,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           )}
         </div>
 
-        {/* OPTIONS */}
+        {/* OPTIONS — hidden during clue media phase, visible immediately for ambient */}
         <div style={{
           flex: 1,
           display: 'flex',
@@ -117,6 +122,9 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           gap: 24,
           padding: '10px 0',
           justifyContent: 'center',
+          opacity: isMediaPhase ? 0 : 1,
+          transform: isMediaPhase ? 'translateX(40px)' : 'translateX(0)',
+          transition: 'opacity 0.3s, transform 0.3s',
         }}>
           {options.map((option, i) => {
             const delay = 5 + i * 3;

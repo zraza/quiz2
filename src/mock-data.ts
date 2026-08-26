@@ -42,6 +42,8 @@ export const mockQuizData: QuizVideoData = {
       options: ['Goodfellas', 'The Godfather', 'Scarface', 'Casino'],
       mediaUrl: 'https://clip.cafe/videos/dad-s357.mp4',
       mediaDuration: 8,
+      mediaFit: 'contain',
+      mediaRole: 'clue',
     },
     {
       id: 'q5',
@@ -74,12 +76,15 @@ export const mockQuizData: QuizVideoData = {
     {
       id: 'q8',
       type: 'simple',
-      questionText: 'What is the chemical symbol for gold?',
+      questionText: 'When did the London Underground first open?',
       questionNumber: 8,
-      totalQuestions: 10,
+      totalQuestions: 12,
       timeLimit: 10,
-      correctAnswer: 'Au',
-      options: ['Go', 'Au', 'Gd', 'Ag'],
+      correctAnswer: '1863',
+      options: ['1843', '1863', '1890', '1905'],
+      mediaUrl: 'https://clip.cafe/videos/dad-s357.mp4',
+      mediaFit: 'cover',
+      mediaRole: 'ambient',
     },
     {
       id: 'q9',

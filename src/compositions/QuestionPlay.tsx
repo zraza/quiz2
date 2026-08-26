@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Video } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { QuizQuestion } from '../types';
 
@@ -17,14 +17,19 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   const { fps } = useVideoConfig();
 
   const options = 'options' in question ? question.options : [];
+  const mediaDuration = Math.min(question.mediaDuration || 0, 20);
+  const mediaFrames = mediaDuration * fps;
+  const isMediaPhase = frame < mediaFrames;
+  const quizFrame = Math.max(0, frame - mediaFrames); // frame relative to quiz start
+
   const countdownFrames = question.timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   // Timer bar
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
 
   // Image animation
@@ -39,9 +44,9 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
       {/* TOP ROW: Question card (full width) */}
       <div style={{
         position: 'absolute',
-        top: 40,
-        left: 70,
-        right: 70,
+        top: 50,
+        left: 100,
+        right: 100,
         display: 'flex',
         alignItems: 'center',
         opacity: titleOpacity,
@@ -64,12 +69,12 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
       {/* CONTENT: Image left + Options right */}
       <div style={{
         position: 'absolute',
-        top: 190,
-        left: 70,
-        right: 70,
-        bottom: 60,
+        top: 210,
+        left: 100,
+        right: 100,
+        bottom: 80,
         display: 'flex',
-        gap: 50,
+        gap: 60,
       }}>
         {/* IMAGE — left 46% */}
         {/* If question has options with an image context (like "gold"), show static image.
@@ -83,19 +88,25 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           transform: `scale(${interpolate(imgSpring, [0, 1], [0.85, 1])}) translateY(${imgFloat}px) rotate(${imgRotate}deg)`,
           position: 'relative',
         }}>
-          {/* Static context image — always visible (e.g. gold bar for "chemical symbol for gold?") */}
-          <div style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(135deg, #f6d365 0%, #fda085 50%, #f5af19 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            gap: 16,
-          }}>
-            <span style={{ fontSize: 130 }}>🏆</span>
-          </div>
+          {/* Video/image content */}
+          {question.mediaUrl ? (
+            <Video
+              src={question.mediaUrl}
+              style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              volume={isMediaPhase ? 1 : 0}
+              startFrom={0}
+              endAt={mediaFrames}
+            />
+          ) : (
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(135deg, #f6d365 0%, #fda085 50%, #f5af19 100%)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexDirection: 'column', gap: 16,
+            }}>
+              <span style={{ fontSize: 130 }}>🏆</span>
+            </div>
+          )}
         </div>
 
         {/* OPTIONS */}
@@ -201,8 +212,8 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
         </div>
       </div>
 
-      {/* TIMER BAR */}
-      {!isRevealing && (
+      {/* TIMER BAR — hidden during media phase */}
+      {!isRevealing && !isMediaPhase && (
         <div style={{
           position: 'absolute',
           bottom: 0,

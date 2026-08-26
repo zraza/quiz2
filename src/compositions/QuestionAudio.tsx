@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio, Video } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { AudioQ } from '../types';
 
@@ -15,13 +15,18 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const mediaDuration = Math.min(question.mediaDuration || 0, 20);
+  const mediaFrames = mediaDuration * fps;
+  const isMediaPhase = frame < mediaFrames;
+  const quizFrame = Math.max(0, frame - mediaFrames);
+
   const countdownFrames = question.timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const titleOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: 'clamp' });
 
@@ -30,7 +35,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
       {/* QUESTION CARD — full width */}
       <div style={{
         position: 'absolute',
-        top: 40, left: 70, right: 70,
+        top: 50, left: 100, right: 100,
         display: 'flex', alignItems: 'center',
         opacity: titleOpacity,
       }}>
@@ -47,8 +52,8 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
 
       {/* CONTENT: Waveform left + Options right */}
       <div style={{
-        position: 'absolute', top: 190, left: 70, right: 70, bottom: 60,
-        display: 'flex', gap: 50,
+        position: 'absolute', top: 210, left: 100, right: 100, bottom: 80,
+        display: 'flex', gap: 60,
       }}>
         {/* WAVEFORM — left 46% */}
         <div style={{
@@ -58,19 +63,30 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
           background: 'linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           flexDirection: 'column', gap: 24, padding: 40,
+          position: 'relative',
         }}>
+          {/* Play audio — supports mp4 (video as audio), mp3, any format */}
+          {question.mediaUrl && isMediaPhase && (
+            question.mediaUrl.endsWith('.mp3') || question.mediaUrl.endsWith('.wav') || question.mediaUrl.endsWith('.ogg')
+              ? <Audio src={question.mediaUrl} startFrom={0} endAt={mediaFrames} volume={1} />
+              : <Video src={question.mediaUrl} style={{ position: 'absolute', width: 1, height: 1, opacity: 0 }} startFrom={0} endAt={mediaFrames} volume={1} />
+          )}
           {/* Waveform bars */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 3, height: 200 }}>
             {Array.from({ length: BAR_COUNT }).map((_, i) => {
               const phase = (frame * 0.08) + i * 0.4;
               const height = isRevealing
                 ? 8 // flatten on reveal
-                : 20 + Math.abs(Math.sin(phase)) * 140 + Math.sin(phase * 0.7) * 40;
+                : isMediaPhase
+                  ? 30 + Math.abs(Math.sin(phase * 1.5)) * 150 + Math.sin(phase * 0.9) * 50 // big during playback
+                  : 15 + Math.abs(Math.sin(phase * 0.5)) * 60; // smaller during thinking
               return (
                 <div key={i} style={{
                   width: 8, borderRadius: 4,
                   height: Math.max(8, height),
-                  background: `hsl(${200 + i * 4}, 80%, ${55 + Math.sin(phase) * 15}%)`,
+                  background: isMediaPhase
+                    ? `hsl(${260 + i * 3}, 80%, ${55 + Math.sin(phase) * 15}%)`
+                    : `hsl(${200 + i * 4}, 60%, ${45 + Math.sin(phase) * 10}%)`,
                   transition: isRevealing ? 'height 0.3s' : 'none',
                 }} />
               );
@@ -149,8 +165,8 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
         </div>
       </div>
 
-      {/* TIMER BAR */}
-      {!isRevealing && (
+      {/* TIMER BAR — hidden during media phase */}
+      {!isRevealing && !isMediaPhase && (
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 28, background: 'rgba(0,0,0,0.15)' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${timerProgress * 100}%`, background: barColor }}>
             <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, transparent ${((frame % 45) / 45) * 100 - 15}%, rgba(255,255,255,0.2) ${((frame % 45) / 45) * 100}%, transparent ${((frame % 45) / 45) * 100 + 15}%)` }} />

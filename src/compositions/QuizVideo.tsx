@@ -23,8 +23,9 @@ const REVEAL_SECONDS = 3;
 
 const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6'];
 
-function getQuestionDuration(timeLimit: number): number {
-  return (timeLimit + REVEAL_SECONDS) * FPS;
+function getQuestionDuration(q: QuizQuestion): number {
+  const media = Math.min(q.mediaDuration || 0, 20);
+  return (media + q.timeLimit + REVEAL_SECONDS) * FPS;
 }
 
 function renderQuestion(question: QuizQuestion): React.ReactNode {
@@ -119,7 +120,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
     currentFrame += TRANSITION_DURATION;
 
     // QUESTION
-    const duration = getQuestionDuration(question.timeLimit);
+    const duration = getQuestionDuration(question);
     sequences.push(
       <Sequence key={question.id} from={currentFrame} durationInFrames={duration}>
         <AbsoluteFill>
@@ -149,7 +150,7 @@ export function calculateTotalDuration(data: QuizVideoData): number {
 
   let total = INTRO_DURATION + GETREADY_DURATION + OUTRO_DURATION + HALFWAY_DURATION;
   questions.forEach((q) => {
-    total += TRANSITION_DURATION + getQuestionDuration(q.timeLimit);
+    total += TRANSITION_DURATION + getQuestionDuration(q);
   });
   return total;
 }

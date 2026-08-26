@@ -1,6 +1,6 @@
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
-import { AutoText, FONT_OPTION } from '../components/AutoText';
+import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { ImageOptionsQ } from '../types';
 
 const LABELS = ['A', 'B', 'C'];
@@ -35,7 +35,7 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
       {/* QUESTION CARD — full width */}
       <div style={{
         position: 'absolute',
-        top: 40, left: 70, right: 70,
+        top: 50, left: 130, right: 130,
         display: 'flex', alignItems: 'center',
         opacity: titleOpacity,
       }}>
@@ -53,8 +53,8 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
       {/* 3 IMAGE OPTIONS — side by side */}
       <div style={{
         position: 'absolute',
-        top: 190, left: 70, right: 70, bottom: 60,
-        display: 'flex', gap: 36, alignItems: 'center',
+        top: 230, left: 130, right: 130, bottom: 100,
+        display: 'flex', gap: 60, alignItems: 'center',
       }}>
         {question.options.map((option, i) => {
           const delay = 5 + i * 4;
@@ -73,25 +73,28 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
           return (
             <div key={i} style={{
               flex: 1, height: '100%',
-              display: 'flex', flexDirection: 'column', gap: 16,
+              position: 'relative',
               transform: `scale(${scale})`,
               opacity: optOpacity * cardOpacity,
             }}>
               {/* Image card */}
               <div style={{
-                flex: 1, borderRadius: 24, overflow: 'hidden',
+                position: 'absolute', inset: 0, bottom: 40,
+                borderRadius: 24, overflow: 'hidden',
                 border: `6px solid ${borderColor}`,
                 boxShadow: isRevealing && isCorrect
                   ? `0 8px 30px rgba(76,175,80,${revealProgress * 0.5})`
                   : '0 8px 30px rgba(0,0,0,0.2)',
                 background: PLACEHOLDER_GRADIENTS[i],
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                position: 'relative',
               }}>
-                {/* Placeholder emoji — replace with <Img src={question.optionImages[i]} /> */}
-                <span style={{ fontSize: 80 }}>
-                  {['🖼️', '🎨', '🏛️'][i]}
-                </span>
+                {/* Show image if URL provided */}
+                {question.optionImages[i] && (
+                  <img
+                    src={question.optionImages[i]}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
 
                 {/* Correct badge */}
                 {isRevealing && isCorrect && revealProgress > 0.2 && (
@@ -122,26 +125,29 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
                 )}
               </div>
 
-              {/* Label below image */}
+              {/* Label overlapping bottom border of image */}
               <div style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14,
+                position: 'absolute', bottom: 16, left: '50%',
+                transform: 'translateX(-50%)',
+                display: 'flex', alignItems: 'center', gap: 14,
+                background: '#FFFFFF', borderRadius: 20,
+                padding: '12px 28px',
+                boxShadow: '0 6px 20px rgba(0,0,0,0.15)',
+                whiteSpace: 'nowrap',
               }}>
                 <div style={{
-                  width: 48, height: 48, borderRadius: '50%',
+                  width: 50, height: 50, borderRadius: '50%',
                   backgroundColor: BADGE_COLORS[i],
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
+                  flexShrink: 0, boxShadow: '0 3px 10px rgba(0,0,0,0.15)',
                 }}>
-                  <span style={{ fontSize: 26, fontWeight: 900, color: '#fff', fontFamily: 'system-ui' }}>
+                  <span style={{ fontSize: 28, fontWeight: 900, color: '#fff', fontFamily: 'system-ui' }}>
                     {LABELS[i]}
                   </span>
                 </div>
-                <span style={{
-                  fontSize: 28, fontWeight: 700, color: '#fff',
-                  fontFamily: FONT_OPTION, textShadow: '0 2px 6px rgba(0,0,0,0.3)',
-                }}>
+                <OptionText width={300} maxSize={40} minSize={20} color="#1a1a1a">
                   {option}
-                </span>
+                </OptionText>
               </div>
             </div>
           );

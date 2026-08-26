@@ -8,6 +8,10 @@ export interface BaseQuestion {
   totalQuestions: number;
   timeLimit: number;
   correctAnswer: string;
+  /** URL to video/audio to play before timer starts (mp4, mp3, etc.) */
+  mediaUrl?: string;
+  /** How long to play the media in seconds (max 20) */
+  mediaDuration?: number;
 }
 
 export interface SimpleQuestion extends BaseQuestion {

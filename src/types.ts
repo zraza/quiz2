@@ -1,4 +1,4 @@
-export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options';
+export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options' | 'this-or-that';
 
 /**
  * Speed controls how fast animations play.
@@ -19,6 +19,7 @@ export const DEFAULT_SPEEDS: Record<QuestionType, Speed> = {
   'image-open': 'slow',          // absorb image + think
   'audio': 'slow',               // listen carefully
   'image-options': 'normal',     // visual comparison is quick
+  'this-or-that': 'fast',        // binary choice, snappy
 };
 
 /** Speed multipliers for animation timings */
@@ -105,7 +106,17 @@ export interface ImageOptionsQ extends BaseQuestion {
   correctIndex: number;
 }
 
-export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ;
+/** This-or-that: two choices side by side with images. Binary pick. */
+export interface ThisOrThatQ extends BaseQuestion {
+  type: 'this-or-that';
+  optionA: string;
+  optionB: string;
+  imageA: string;
+  imageB: string;
+  correctSide: 'A' | 'B';
+}
+
+export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ | ThisOrThatQ;
 
 /** Get the speed config for a question (per-question override > type default) */
 export function getSpeedConfig(question: QuizQuestion) {

@@ -10,6 +10,7 @@ import { QuestionOpen } from './QuestionOpen';
 import { QuestionImage } from './QuestionImage';
 import { QuestionAudio } from './QuestionAudio';
 import { QuestionImageOptions } from './QuestionImageOptions';
+import { QuestionThisOrThat } from './QuestionThisOrThat';
 import { HalfwayScreen } from './HalfwayScreen';
 import { OutroScreen } from './OutroScreen';
 
@@ -54,6 +55,8 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
       return <QuestionAudio question={question} />;
     case 'image-options':
       return <QuestionImageOptions question={question} />;
+    case 'this-or-that':
+      return <QuestionThisOrThat question={question} />;
     case 'simple':
     case 'four-options':
     case 'image-question':

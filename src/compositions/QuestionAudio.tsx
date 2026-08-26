@@ -38,6 +38,19 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   // Pulsing speaker animation
   const speakerPulse = isPlaying ? 0.9 + Math.sin(frame * 0.2) * 0.1 : 0.8;
 
+  // Transition from spectrum to options
+  const transitionFrame = Math.max(0, frame - mediaFrames);
+  const spectrumOpacity = isMediaPhase
+    ? 1
+    : mediaFrames > 0
+      ? interpolate(transitionFrame, [0, 12], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 0;
+  const optionsOpacity = isMediaPhase
+    ? 0
+    : mediaFrames > 0
+      ? interpolate(transitionFrame, [8, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+      : 1;
+
   return (
     <AbsoluteFill>
       {/* INVISIBLE AUDIO PLAYBACK */}
@@ -72,17 +85,54 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
         </div>
       </div>
 
+      {/* AUDIO SPECTRUM — full width during media phase, fades out */}
+      {spectrumOpacity > 0 && (
+        <div style={{
+          position: 'absolute',
+          top: 220, left: 100, right: 100, bottom: 80,
+          borderRadius: 28, overflow: 'hidden',
+          background: 'linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          flexDirection: 'column', gap: 30,
+          border: '5px solid rgba(255,255,255,0.9)',
+          boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+          opacity: spectrumOpacity,
+        }}>
+          {/* Waveform bars */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5, height: 280 }}>
+            {Array.from({ length: 48 }).map((_, i) => {
+              const phase = (frame * 0.1) + i * 0.35;
+              const height = 30 + Math.abs(Math.sin(phase * 1.5)) * 200 + Math.sin(phase * 0.9) * 60;
+              return (
+                <div key={i} style={{
+                  width: 12, borderRadius: 6,
+                  height: Math.max(12, height),
+                  background: `hsl(${260 + i * 2}, 80%, ${55 + Math.sin(phase) * 15}%)`,
+                }} />
+              );
+            })}
+          </div>
+          {/* Audio title */}
+          <span style={{
+            fontSize: 36, fontWeight: 700,
+            color: 'rgba(255,255,255,0.6)', fontFamily: FONT_OPTION,
+            letterSpacing: 3,
+          }}>
+            {question.audioTitle || '🎵 LISTEN CAREFULLY...'}
+          </span>
+        </div>
+      )}
+
       {/* OPTIONS — full width, grid or stack */}
       <div style={{
         position: 'absolute',
         top: 220, left: 100, right: 100, bottom: 80,
         display: isEven ? 'grid' : 'flex',
         ...(isEven
-          ? { gridTemplateColumns: '1fr 1fr', gap: 30 }
-          : { flexDirection: 'column' as const, gap: 24 }
+          ? { gridTemplateColumns: '1fr 1fr', gap: 30, alignContent: 'center' }
+          : { flexDirection: 'column' as const, gap: 20, justifyContent: 'center' }
         ),
-        padding: '10px 0',
-        opacity: isMediaPhase ? 0 : 1,
+        opacity: optionsOpacity,
       }}>
         {question.options.map((option, i) => {
           const delay = (mediaFrames > 0 ? mediaFrames / fps * 30 : 0) + 3 + i * 2;
@@ -94,14 +144,13 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
           const isWrong = isRevealing && !isCorrect;
           const cardOpacity = isWrong ? 1 - revealProgress * 0.55 : 1;
 
-          // Correct card gets a subtle green glow
           const borderColor = isRevealing && isCorrect
             ? `rgba(76,175,80,${revealProgress})`
             : 'transparent';
 
           return (
             <div key={i} style={{
-              flex: isEven ? undefined : 1,
+              height: isEven ? 240 : 195,
               position: 'relative',
               backgroundColor: '#FFFFFF',
               borderRadius: 24,
@@ -109,7 +158,8 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
                 ? `0 4px 16px rgba(0,0,0,0.08), 0 0 20px rgba(76,175,80,${revealProgress * 0.4})`
                 : '0 4px 16px rgba(0,0,0,0.08)',
               border: `4px solid ${borderColor}`,
-              display: 'flex', alignItems: 'center', gap: 28, padding: '0 44px',
+              display: 'flex', alignItems: 'center', gap: 28,
+              padding: '0 44px',
               transform: `scale(${scale})`,
               opacity: optOpacity * cardOpacity,
             }}>
@@ -125,8 +175,8 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
                 </span>
               </div>
 
-              {/* Option text */}
-              <OptionText width={isEven ? 600 : 1300} maxSize={isEven ? 44 : 52} minSize={22} color="#1a1a1a">
+              {/* Option text — fill remaining space */}
+              <OptionText width={isEven ? 650 : 1450} maxSize={isEven ? 64 : 80} minSize={32} color="#1a1a1a">
                 {option}
               </OptionText>
 

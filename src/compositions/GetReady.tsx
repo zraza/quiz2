@@ -15,12 +15,18 @@ export const GetReady: React.FC = () => {
   const frameInCount = frame % framesPerCount;
 
   const numbers = ['3', '2', '1'];
+  const colors = ['#FF9800', '#E53935', '#4CAF50'];
   const currentNumber = numbers[Math.min(countIndex, 2)];
+  const currentColor = colors[Math.min(countIndex, 2)];
 
   // Each number pops in fast and punchy
   const pop = spring({ frame: frameInCount, fps, config: { damping: 12, stiffness: 220, mass: 0.7 } });
   const scale = interpolate(pop, [0, 1], [0.2, 1]);
   const opacity = interpolate(frameInCount, [0, fps * 0.6, fps - 1], [0, 1, 0.2], { extrapolateRight: 'clamp' });
+
+  // Ring that expands outward
+  const ringScale = interpolate(frameInCount, [0, fps * 0.8], [0.8, 2.5], { extrapolateRight: 'clamp' });
+  const ringOpacity = interpolate(frameInCount, [0, fps * 0.5], [0.6, 0], { extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{
@@ -42,13 +48,23 @@ export const GetReady: React.FC = () => {
         GET READY
       </span>
 
+      {/* Expanding ring pulse */}
+      <div style={{
+        position: 'absolute',
+        width: 300, height: 300,
+        borderRadius: '50%',
+        border: `6px solid ${currentColor}`,
+        transform: `scale(${ringScale})`,
+        opacity: ringOpacity,
+      }} />
+
       {/* Big number */}
       <span style={{
         fontSize: 300,
         fontWeight: 400,
         fontFamily: FONT_QUESTION,
-        color: '#fff',
-        textShadow: '6px 6px 0 rgba(0,0,0,0.3), 3px 3px 0 rgba(0,0,0,0.2)',
+        color: currentColor,
+        textShadow: `6px 6px 0 rgba(0,0,0,0.3), 0 0 40px ${currentColor}40`,
         transform: `scale(${scale})`,
         opacity,
         lineHeight: 1,

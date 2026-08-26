@@ -53,8 +53,8 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
         right: 100,
         display: 'flex',
         alignItems: 'center',
-        opacity: titleOpacity,
-        transform: `translateY(${titleY}px)`,
+        opacity: titleOpacity * (isRevealing ? interpolate(revealProgress, [0, 0.5], [1, 0.5], { extrapolateRight: 'clamp' }) : 1),
+        transform: `translateY(${titleY + (isRevealing ? -revealProgress * 20 : 0)}px)`,
       }}>
         {/* Question card — takes full width */}
         <div style={{
@@ -166,12 +166,15 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
                 position: 'relative',
                 backgroundColor: '#FFFFFF',
                 borderRadius: 24,
-                boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
+                boxShadow: isRevealing && isCorrect
+                  ? `0 0 ${30 * revealProgress}px rgba(76,175,80,${revealProgress * 0.6}), 0 4px 16px rgba(0,0,0,0.08)`
+                  : '0 4px 16px rgba(0,0,0,0.08)',
+                border: isRevealing && isCorrect ? `4px solid rgba(76,175,80,${revealProgress})` : '4px solid transparent',
                 display: 'flex',
                 alignItems: 'center',
                 gap: 28,
                 padding: '0 44px',
-                transform: `translateX(${translateX + shakeX}px)`,
+                transform: `translateX(${translateX + shakeX}px)${isRevealing && isCorrect ? ` scale(${1 + revealProgress * 0.03})` : ''}`,
                 opacity: optOpacity * cardOpacity,
               }}>
                 {/* Letter badge */}

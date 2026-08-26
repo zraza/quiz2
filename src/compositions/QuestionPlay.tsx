@@ -32,13 +32,16 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   // Timer bar
   const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
+  const timerUrgent = timerProgress < 0.2 && !isRevealing;
+  const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
 
   // Image animation
-  const imgFloat = Math.sin(frame * 0.035) * 5;
-  const imgRotate = Math.sin(frame * 0.02) * 0.8;
-  const imgSpring = spring({ frame, fps, config: { damping: 10 } });
+  const imgFloat = Math.sin(frame * 0.035) * 3;
+  const imgRotate = Math.sin(frame * 0.02) * 0.5;
+  const imgSpring = spring({ frame, fps, config: { damping: 14, stiffness: 200, mass: 0.8 } });
 
-  const titleOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: 'clamp' });
+  const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
+  const titleY = interpolate(frame, [0, 10], [-30, 0], { extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill>
@@ -51,6 +54,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
         display: 'flex',
         alignItems: 'center',
         opacity: titleOpacity,
+        transform: `translateY(${titleY}px)`,
       }}>
         {/* Question card — takes full width */}
         <div style={{
@@ -68,73 +72,93 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
       </div>
 
       {/* CONTENT: Image left + Options right */}
-      <div style={{
-        position: 'absolute',
-        top: 210,
-        left: 100,
-        right: 100,
-        bottom: 80,
-        display: 'flex',
-        gap: 60,
-      }}>
-        {/* IMAGE — left 46% */}
-        {/* If question has options with an image context (like "gold"), show static image.
-            If it's a mystery/guess question, crossfade to answer image on reveal. */}
-        <div style={{
-          flex: '0 0 46%',
-          borderRadius: 28,
-          overflow: 'hidden',
-          border: '5px solid rgba(255,255,255,0.9)',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
-          transform: `scale(${interpolate(imgSpring, [0, 1], [0.85, 1])}) translateY(${imgFloat}px) rotate(${imgRotate}deg)`,
-          position: 'relative',
-        }}>
-          {/* Video/image content */}
-          {question.mediaUrl ? (
-            <Video
-              src={question.mediaUrl}
-              style={{
-                position: 'absolute', inset: 0, width: '100%', height: '100%',
-                objectFit: question.mediaFit || 'cover',
-                background: '#000',
-              }}
-              volume={isMediaPhase ? 1 : 0}
-              startFrom={0}
-              pauseWhenBuffering
-            />
-          ) : (
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: 'linear-gradient(135deg, #f6d365 0%, #fda085 50%, #f5af19 100%)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexDirection: 'column', gap: 16,
-            }}>
-              <span style={{ fontSize: 130 }}>🏆</span>
-            </div>
-          )}
-        </div>
+      {(() => {
+        // Animate video width: 100% during media → 46% after
+        // Transition happens over 15 frames after media ends
+        const transitionFrame = Math.max(0, frame - mediaFrames);
+        const videoWidthPct = isMediaPhase
+          ? 100
+          : mediaFrames > 0
+            ? interpolate(transitionFrame, [0, 15], [100, 46], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+            : 46;
+        const optionsOpacity = isMediaPhase
+          ? 0
+          : mediaFrames > 0
+            ? interpolate(transitionFrame, [8, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+            : 1;
+        const contentGap = isMediaPhase ? 0 : interpolate(Math.min(transitionFrame, 15), [0, 15], [0, 60], { extrapolateRight: 'clamp' });
 
-        {/* OPTIONS — hidden during clue media phase, visible immediately for ambient */}
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 24,
-          padding: '10px 0',
-          justifyContent: 'center',
-          opacity: isMediaPhase ? 0 : 1,
-          transform: isMediaPhase ? 'translateX(40px)' : 'translateX(0)',
-          transition: 'opacity 0.3s, transform 0.3s',
-        }}>
+        return (
+          <div style={{
+            position: 'absolute',
+            top: 210,
+            left: 100,
+            right: 100,
+            bottom: 80,
+            display: 'flex',
+            gap: contentGap,
+            alignItems: 'stretch',
+          }}>
+            {/* IMAGE/VIDEO */}
+            <div style={{
+              width: `${videoWidthPct}%`,
+              flexShrink: 0,
+              borderRadius: 28,
+              overflow: 'hidden',
+              border: '5px solid rgba(255,255,255,0.9)',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.25)',
+              position: 'relative',
+            }}>
+              {/* Video/image content */}
+              {question.mediaUrl ? (
+                <Video
+                  src={question.mediaUrl}
+                  style={{
+                    position: 'absolute', inset: 0, width: '100%', height: '100%',
+                    objectFit: question.mediaFit || 'cover',
+                    background: '#000',
+                  }}
+                  volume={mediaRole === 'ambient' ? 0 : isMediaPhase ? 1 : 0}
+                  startFrom={0}
+                  loop={mediaRole === 'ambient'}
+                  pauseWhenBuffering
+                />
+              ) : (
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(135deg, #f6d365 0%, #fda085 50%, #f5af19 100%)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexDirection: 'column', gap: 16,
+                }}>
+                  <span style={{ fontSize: 130 }}>🏆</span>
+                </div>
+              )}
+            </div>
+
+            {/* OPTIONS — fade in after media ends */}
+            <div style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 24,
+              padding: '10px 0',
+              justifyContent: 'center',
+              opacity: optionsOpacity,
+            }}>
           {options.map((option, i) => {
-            const delay = 5 + i * 3;
-            const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: 10 } });
-            const translateX = interpolate(s, [0, 1], [60, 0]);
+            const delay = 3 + i * 2;
+            const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: 14, stiffness: 220, mass: 0.7 } });
+            const translateX = interpolate(s, [0, 1], [50, 0]);
             const optOpacity = interpolate(s, [0, 1], [0, 1]);
 
             const isCorrect = option === question.correctAnswer;
             const isWrong = isRevealing && !isCorrect;
             const cardOpacity = isWrong ? 1 - revealProgress * 0.55 : 1;
+
+            // Shake on correct reveal
+            const shakeX = isRevealing && isCorrect && revealProgress < 0.5
+              ? Math.sin(quizFrame * 1.5) * 4 * (1 - revealProgress * 2)
+              : 0;
 
             return (
               <div key={i} style={{
@@ -147,7 +171,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
                 alignItems: 'center',
                 gap: 28,
                 padding: '0 44px',
-                transform: `translateX(${translateX}px)`,
+                transform: `translateX(${translateX + shakeX}px)`,
                 opacity: optOpacity * cardOpacity,
               }}>
                 {/* Letter badge */}
@@ -218,7 +242,9 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
             );
           })}
         </div>
-      </div>
+          </div>
+        );
+      })()}
 
       {/* TIMER BAR — hidden during media phase */}
       {!isRevealing && !isMediaPhase && (
@@ -227,7 +253,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           bottom: 0,
           left: 0,
           right: 0,
-          height: 28,
+          height: timerPulse,
           background: 'rgba(0,0,0,0.15)',
         }}>
           <div style={{

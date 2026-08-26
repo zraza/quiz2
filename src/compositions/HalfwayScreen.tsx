@@ -10,10 +10,10 @@ export const HalfwayScreen: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const pop = spring({ frame, fps, config: { damping: 8, stiffness: 80 } });
+  const pop = spring({ frame, fps, config: { damping: 12, stiffness: 200, mass: 0.8 } });
   const scale = interpolate(pop, [0, 1], [0.3, 1]);
 
-  const subOpacity = interpolate(frame, [15, 30], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const subOpacity = interpolate(frame, [10, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{

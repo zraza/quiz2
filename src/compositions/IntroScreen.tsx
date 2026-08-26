@@ -22,17 +22,17 @@ export const IntroScreen: React.FC<Props> = ({
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Title pop
-  const titleSpring = spring({ frame, fps, config: { damping: 8, stiffness: 80 } });
+  // Title pop - PUNCHY
+  const titleSpring = spring({ frame, fps, config: { damping: 12, stiffness: 200, mass: 0.8 } });
   const titleScale = interpolate(titleSpring, [0, 1], [0.3, 1]);
   const titleOpacity = interpolate(titleSpring, [0, 1], [0, 1]);
 
-  // Subtitle fade
-  const subOpacity = interpolate(frame, [20, 35], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const subY = interpolate(frame, [20, 35], [30, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  // Subtitle fade - faster
+  const subOpacity = interpolate(frame, [12, 22], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const subY = interpolate(frame, [12, 22], [20, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  // Info line
-  const infoOpacity = interpolate(frame, [40, 55], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  // Info line - faster
+  const infoOpacity = interpolate(frame, [24, 34], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{

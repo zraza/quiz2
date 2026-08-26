@@ -14,11 +14,11 @@ export const OutroScreen: React.FC<Props> = ({ totalQuestions }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const pop = spring({ frame, fps, config: { damping: 8, stiffness: 80 } });
+  const pop = spring({ frame, fps, config: { damping: 12, stiffness: 200, mass: 0.8 } });
   const scale = interpolate(pop, [0, 1], [0.3, 1]);
 
-  const tiersOpacity = interpolate(frame, [25, 40], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
-  const ctaOpacity = interpolate(frame, [50, 65], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const tiersOpacity = interpolate(frame, [15, 25], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
+  const ctaOpacity = interpolate(frame, [35, 45], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{

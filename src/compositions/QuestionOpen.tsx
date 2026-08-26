@@ -34,6 +34,8 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
   // Timer
   const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
+  const timerUrgent = timerProgress < 0.2 && !isRevealing;
+  const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
 
   const titleOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: 'clamp' });
 
@@ -41,8 +43,8 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
   const questionY = isRevealing ? interpolate(revealProgress, [0, 1], [0, -120]) : 0;
   const questionOpacity = isRevealing ? interpolate(revealProgress, [0, 0.5], [1, 0.4], { extrapolateRight: 'clamp' }) : 1;
 
-  // Answer pop
-  const answerSpring = spring({ frame: Math.max(0, frame - countdownFrames), fps, config: { damping: 8, stiffness: 80 } });
+  // Answer pop - PUNCHY
+  const answerSpring = spring({ frame: Math.max(0, frame - countdownFrames), fps, config: { damping: 12, stiffness: 220, mass: 0.7 } });
   const answerScale = interpolate(answerSpring, [0, 1], [0.3, 1]);
   const answerOpacity = interpolate(answerSpring, [0, 1], [0, 1]);
 
@@ -163,7 +165,7 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
           bottom: 0,
           left: 0,
           right: 0,
-          height: 28,
+          height: timerPulse,
           background: 'rgba(0,0,0,0.15)',
         }}>
           <div style={{

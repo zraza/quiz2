@@ -17,10 +17,10 @@ export const GetReady: React.FC = () => {
   const numbers = ['3', '2', '1'];
   const currentNumber = numbers[Math.min(countIndex, 2)];
 
-  // Each number pops in and scales
-  const pop = spring({ frame: frameInCount, fps, config: { damping: 8, stiffness: 100 } });
+  // Each number pops in fast and punchy
+  const pop = spring({ frame: frameInCount, fps, config: { damping: 12, stiffness: 220, mass: 0.7 } });
   const scale = interpolate(pop, [0, 1], [0.2, 1]);
-  const opacity = interpolate(frameInCount, [0, fps * 0.7, fps - 1], [0, 1, 0.3], { extrapolateRight: 'clamp' });
+  const opacity = interpolate(frameInCount, [0, fps * 0.6, fps - 1], [0, 1, 0.2], { extrapolateRight: 'clamp' });
 
   return (
     <AbsoluteFill style={{

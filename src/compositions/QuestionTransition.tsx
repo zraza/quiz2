@@ -22,17 +22,17 @@ export const QuestionTransition: React.FC<Props> = ({ questionNumber, totalQuest
 
   const totalFrames = Math.round(fps * 1.5);
 
-  // Number slides in from left
-  const numSpring = spring({ frame, fps, config: { damping: 9, stiffness: 90 } });
+  // Number slides in from left - FAST
+  const numSpring = spring({ frame, fps, config: { damping: 14, stiffness: 220, mass: 0.7 } });
   const numX = interpolate(numSpring, [0, 1], [-120, 0]);
   const numOpacity = interpolate(numSpring, [0, 1], [0, 1]);
 
-  // Slash grows
-  const slashSpring = spring({ frame: Math.max(0, frame - 6), fps, config: { damping: 12, stiffness: 100 } });
+  // Slash grows - SNAPPY
+  const slashSpring = spring({ frame: Math.max(0, frame - 4), fps, config: { damping: 14, stiffness: 250, mass: 0.6 } });
   const slashScale = interpolate(slashSpring, [0, 1], [0, 1]);
 
-  // Total slides in from right
-  const totalSpring = spring({ frame: Math.max(0, frame - 10), fps, config: { damping: 10, stiffness: 80 } });
+  // Total slides in from right - FAST
+  const totalSpring = spring({ frame: Math.max(0, frame - 7), fps, config: { damping: 12, stiffness: 200, mass: 0.7 } });
   const totalX = interpolate(totalSpring, [0, 1], [80, 0]);
   const totalOpacity = interpolate(totalSpring, [0, 1], [0, 1]);
 

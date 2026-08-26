@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio, Video } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { AudioQ } from '../types';
+import { getSpeedConfig } from '../types';
 
 const LABELS = ['A', 'B', 'C', 'D', 'E', 'F'];
 const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800', '#9C27B0', '#00897B'];
@@ -17,6 +18,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const { fps } = useVideoConfig();
 
   const mediaRole = question.mediaRole || 'clue';
+  const spd = getSpeedConfig(question);
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
   const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0;
   const isMediaPhase = frame < mediaFrames;
@@ -25,7 +27,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const countdownFrames = question.timeLimit * fps;
   const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
@@ -135,8 +137,8 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
         opacity: optionsOpacity,
       }}>
         {question.options.map((option, i) => {
-          const delay = (mediaFrames > 0 ? mediaFrames / fps * 30 : 0) + 3 + i * 2;
-          const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: 12, stiffness: 200, mass: 0.8 } });
+          const delay = (mediaFrames > 0 ? mediaFrames / fps * 30 : 0) + spd.entryDelay + i * spd.entryGap;
+          const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
           const scale = interpolate(s, [0, 1], [0.85, 1]);
           const optOpacity = interpolate(s, [0, 1], [0, 1]);
 

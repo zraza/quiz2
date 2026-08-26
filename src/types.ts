@@ -1,5 +1,33 @@
 export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options';
 
+/**
+ * Speed controls how fast animations play.
+ * - 'slow': relaxed pace, good for older audience, complex questions
+ * - 'normal': standard quiz pace
+ * - 'fast': rapid fire, short answers, keeps energy high
+ */
+export type Speed = 'slow' | 'normal' | 'fast';
+
+/** Default speeds per question type */
+export const DEFAULT_SPEEDS: Record<QuestionType, Speed> = {
+  'simple': 'normal',
+  'four-options': 'normal',
+  'image-question': 'normal',
+  'video-question': 'slow',      // needs time to absorb visual
+  'audio-question': 'slow',      // needs time to listen
+  'open': 'slow',                // thinking time, no options to guide
+  'image-open': 'slow',          // absorb image + think
+  'audio': 'slow',               // listen carefully
+  'image-options': 'normal',     // visual comparison is quick
+};
+
+/** Speed multipliers for animation timings */
+export const SPEED_CONFIG = {
+  slow: { entryDelay: 5, entryGap: 3, revealFrames: 18, springDamping: 12, springStiffness: 160, mass: 0.9 },
+  normal: { entryDelay: 3, entryGap: 2, revealFrames: 12, springDamping: 14, springStiffness: 220, mass: 0.7 },
+  fast: { entryDelay: 1, entryGap: 1, revealFrames: 8, springDamping: 16, springStiffness: 300, mass: 0.5 },
+} as const;
+
 export interface BaseQuestion {
   id: string;
   type: QuestionType;
@@ -8,6 +36,8 @@ export interface BaseQuestion {
   totalQuestions: number;
   timeLimit: number;
   correctAnswer: string;
+  /** Override the default speed for this question type */
+  speed?: Speed;
   /** URL to video/audio to play before timer starts (mp4, mp3, etc.) */
   mediaUrl?: string;
   /** How long to play the media in seconds (max 20). Only used when mediaRole='clue'. */
@@ -76,6 +106,12 @@ export interface ImageOptionsQ extends BaseQuestion {
 }
 
 export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ;
+
+/** Get the speed config for a question (per-question override > type default) */
+export function getSpeedConfig(question: QuizQuestion) {
+  const speed = question.speed || DEFAULT_SPEEDS[question.type];
+  return SPEED_CONFIG[speed];
+}
 
 export interface QuizVideoData {
   title: string;

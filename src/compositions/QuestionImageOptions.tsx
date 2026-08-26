@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { ImageOptionsQ } from '../types';
+import { getSpeedConfig } from '../types';
 
 const LABELS = ['A', 'B', 'C'];
 const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5'];
@@ -19,11 +20,12 @@ const PLACEHOLDER_GRADIENTS = [
 export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ question }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const spd = getSpeedConfig(question);
 
   const countdownFrames = question.timeLimit * fps;
   const isRevealing = frame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(frame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
@@ -59,8 +61,8 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
         display: 'flex', gap: 60, alignItems: 'center',
       }}>
         {question.options.map((option, i) => {
-          const delay = 3 + i * 3;
-          const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: 14, stiffness: 220, mass: 0.7 } });
+          const delay = spd.entryDelay + i * spd.entryGap;
+          const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
           const scale = interpolate(s, [0, 1], [0.85, 1]);
           const optOpacity = interpolate(s, [0, 1], [0, 1]);
 

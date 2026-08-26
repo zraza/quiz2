@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Video } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { QuizQuestion } from '../types';
+import { getSpeedConfig } from '../types';
 
 const LABELS = ['A', 'B', 'C', 'D'];
 const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800'];
@@ -17,6 +18,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   const { fps } = useVideoConfig();
 
   const options = 'options' in question ? question.options : [];
+  const spd = getSpeedConfig(question);
   const mediaRole = question.mediaRole || 'clue';
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
   const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0; // ambient = no delay
@@ -26,7 +28,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   const countdownFrames = question.timeLimit * fps;
   const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 15], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   // Timer bar
@@ -38,7 +40,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   // Image animation
   const imgFloat = Math.sin(frame * 0.035) * 3;
   const imgRotate = Math.sin(frame * 0.02) * 0.5;
-  const imgSpring = spring({ frame, fps, config: { damping: 14, stiffness: 200, mass: 0.8 } });
+  const imgSpring = spring({ frame, fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
 
   const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
   const titleY = interpolate(frame, [0, 10], [-30, 0], { extrapolateRight: 'clamp' });
@@ -146,8 +148,8 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
               opacity: optionsOpacity,
             }}>
           {options.map((option, i) => {
-            const delay = 3 + i * 2;
-            const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: 14, stiffness: 220, mass: 0.7 } });
+            const delay = spd.entryDelay + i * spd.entryGap;
+            const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
             const translateX = interpolate(s, [0, 1], [50, 0]);
             const optOpacity = interpolate(s, [0, 1], [0, 1]);
 

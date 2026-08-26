@@ -8,6 +8,8 @@ import { QuestionTransition } from './QuestionTransition';
 import { QuestionPlay } from './QuestionPlay';
 import { QuestionOpen } from './QuestionOpen';
 import { QuestionImage } from './QuestionImage';
+import { QuestionAudio } from './QuestionAudio';
+import { QuestionImageOptions } from './QuestionImageOptions';
 import { HalfwayScreen } from './HalfwayScreen';
 import { OutroScreen } from './OutroScreen';
 
@@ -46,6 +48,10 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
           answerImageUrl={question.answerImageUrl}
         />
       );
+    case 'audio':
+      return <QuestionAudio question={question} />;
+    case 'image-options':
+      return <QuestionImageOptions question={question} />;
     case 'simple':
     case 'four-options':
     case 'image-question':

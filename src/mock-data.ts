@@ -235,7 +235,7 @@ export const mockQuizData: QuizVideoData = addVo({
       timeLimit: 12,
       correctAnswer: 'Colosseum',
       imageUrl: 'https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      options: ['Parthenon', 'Colosseum', 'Stonehenge', 'Taj Mahal'],
+      options: [],
     },
     {
       id: 'q-blur1',
@@ -246,7 +246,7 @@ export const mockQuizData: QuizVideoData = addVo({
       timeLimit: 10,
       correctAnswer: 'Elephant',
       imageUrl: 'https://images.pexels.com/photos/66898/elephant-cub-tsavo-kenya-66898.jpeg?auto=compress&cs=tinysrgb&w=1200',
-      options: ['Giraffe', 'Elephant', 'Rhino', 'Hippo'],
+      options: [],
     },
     {
       id: 'q-tf1',

@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { AutoText, FONT_QUESTION, FONT_OPTION } from '../components/AutoText';
+import { TimerBar } from '../components/TimerBar';
 
 interface Props {
   questionNumber: number;
@@ -40,7 +41,6 @@ export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, t
 
   // Timer
   const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
-  const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
 
   const titleOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: 'clamp' });
 
@@ -191,31 +191,7 @@ export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, t
       )}
 
       {/* TIMER BAR */}
-      {!isRevealing && frame >= voFrames && (
-        <div style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: 28,
-          background: 'rgba(0,0,0,0.15)',
-        }}>
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: `${timerProgress * 100}%`,
-            background: barColor,
-          }}>
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: `linear-gradient(90deg, transparent ${((frame % 45) / 45) * 100 - 15}%, rgba(255,255,255,0.2) ${((frame % 45) / 45) * 100}%, transparent ${((frame % 45) / 45) * 100 + 15}%)`,
-            }} />
-          </div>
-        </div>
-      )}
+      <TimerBar progress={timerProgress} entryFrame={voFrames} visible={!isRevealing && frame >= voFrames} />
     </AbsoluteFill>
   );
 };

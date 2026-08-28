@@ -1,7 +1,7 @@
 import type { QuizVideoData } from './types';
 import { voPath } from './vo';
 
-// Auto-add VO URLs based on question text (hashed filenames)
+// Auto-add VO URLs based on question text (hashed filenames via staticFile)
 function addVo(data: QuizVideoData): QuizVideoData {
   return {
     ...data,

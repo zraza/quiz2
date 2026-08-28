@@ -3,6 +3,8 @@
  * Uses a simple hash (no Node crypto) for browser compatibility.
  */
 
+import { staticFile } from 'remotion';
+
 /** Simple string hash — produces a 12-char hex string */
 function simpleHash(str: string): string {
   let h1 = 0xdeadbeef;
@@ -25,7 +27,7 @@ export function voHash(text: string): string {
   return simpleHash(text.trim().toLowerCase());
 }
 
-/** Get the public VO file path for a given text */
+/** Get the full static URL for a VO file (uses Remotion's staticFile) */
 export function voPath(text: string): string {
-  return `/vo/${voHash(text)}.mp3`;
+  return staticFile(`vo/${voHash(text)}.mp3`);
 }

@@ -78,7 +78,7 @@ export const mockQuizData: QuizVideoData = addVo({
       timeLimit: 10,
       correctAnswer: '1954',
       options: ['1950', '1954', '1958', '1962'],
-      mediaUrl: 'https://clip.cafe/videos/dad-s357.mp4',
+      mediaUrl: 'https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=1200',
       mediaRole: 'ambient',
       mediaFit: 'cover',
     },

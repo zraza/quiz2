@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, interpolate, Video } from 'remotion';
+import { AbsoluteFill, interpolate, Video, Img } from 'remotion';
 import { TimerBar } from '../components/TimerBar';
 import { QuestionCard } from '../components/QuestionCard';
 import { OptionCard } from '../components/OptionCard';
@@ -63,18 +63,28 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
             }}>
               {/* Video/image content */}
               {question.mediaUrl ? (
-                <Video
-                  src={question.mediaUrl}
-                  style={{
-                    position: 'absolute', inset: 0, width: '100%', height: '100%',
-                    objectFit: question.mediaFit || 'cover',
-                    background: '#000',
-                  }}
-                  volume={mediaRole === 'ambient' ? 0 : isMediaPhase ? 1 : 0}
-                  startFrom={0}
-                  loop={mediaRole === 'ambient'}
-                  pauseWhenBuffering
-                />
+                /\.(mp4|webm|mov)(\?|$)/i.test(question.mediaUrl) ? (
+                  <Video
+                    src={question.mediaUrl}
+                    style={{
+                      position: 'absolute', inset: 0, width: '100%', height: '100%',
+                      objectFit: question.mediaFit || 'cover',
+                      background: '#000',
+                    }}
+                    volume={mediaRole === 'ambient' ? 0 : isMediaPhase ? 1 : 0}
+                    startFrom={0}
+                    loop={mediaRole === 'ambient'}
+                    pauseWhenBuffering
+                  />
+                ) : (
+                  <Img
+                    src={question.mediaUrl}
+                    style={{
+                      position: 'absolute', inset: 0, width: '100%', height: '100%',
+                      objectFit: question.mediaFit || 'cover',
+                    }}
+                  />
+                )
               ) : (
                 <div style={{
                   position: 'absolute', inset: 0,

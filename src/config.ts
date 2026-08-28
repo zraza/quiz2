@@ -38,8 +38,12 @@ export const TIMER_HEIGHT = 44;
 
 // ============ COLORS ============
 export const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6'];
-export const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800'];
+export const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800', '#8E24AA', '#00897B'];
+export const LABELS = ['A', 'B', 'C', 'D', 'E', 'F'];
 export const TIMER_COLORS = { good: '#4CAF50', warning: '#FF9800', danger: '#F44336' };
+
+// ============ INTERPOLATION ============
+export const CLAMP = { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' } as const;
 
 // ============ VO ============
 export const VO_VOICE = 'Daniel';

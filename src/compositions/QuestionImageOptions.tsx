@@ -1,12 +1,12 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio } from 'remotion';
-import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
+import { AbsoluteFill, spring, interpolate } from 'remotion';
+import { OptionText } from '../components/AutoText';
+import { QuestionCard } from '../components/QuestionCard';
 import { TimerBar } from '../components/TimerBar';
 import type { ImageOptionsQ } from '../types';
-import { getSpeedConfig } from '../types';
+import { LABELS, BADGE_COLORS } from '../config';
+import { useQuizTiming } from '../hooks/useQuizTiming';
 
-const LABELS = ['A', 'B', 'C'];
-const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5'];
 // ponytail: placeholder gradients until real images are wired via <Img>
 const PLACEHOLDER_GRADIENTS = [
   'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -19,41 +19,12 @@ const PLACEHOLDER_GRADIENTS = [
  * On reveal: correct gets green border + ✓, wrong dim + red border.
  */
 export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ question }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const spd = getSpeedConfig(question);
-
-  const voFrames = Math.ceil((question.voDuration || 0) * fps);
-  const quizFrame = Math.max(0, frame - voFrames);
-
-  const countdownFrames = question.timeLimit * fps;
-  const isRevealing = quizFrame >= countdownFrames;
-  const revealProgress = isRevealing
-    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : 0;
-
-  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
-  const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
+  const { frame, fps, spd, voFrames, quizFrame, isRevealing, revealProgress, timerProgress } = useQuizTiming(question);
 
   return (
     <AbsoluteFill>
       {/* QUESTION CARD — full width */}
-      <div style={{
-        position: 'absolute',
-        top: 50, left: 130, right: 130,
-        display: 'flex', alignItems: 'center',
-        opacity: titleOpacity,
-      }}>
-        <div style={{
-          flex: 1, background: '#FFFFFF', borderRadius: 24,
-          padding: '28px 50px', boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
-          textAlign: 'center',
-        }}>
-          <AutoText width={1500} maxSize={68} minSize={34} maxLines={2} color="#1a1a1a" shadow={false}>
-            {question.questionText}
-          </AutoText>
-        </div>
-      </div>
+      <QuestionCard text={question.questionText} isRevealing={isRevealing} revealProgress={revealProgress} />
 
       {/* 3 IMAGE OPTIONS — side by side */}
       <div style={{

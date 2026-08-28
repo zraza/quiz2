@@ -1,12 +1,6 @@
 import type { QuizVideoData } from './types';
-import { VO_GAP_SECONDS } from './config';
+import { estimateVoDuration } from './config';
 import { voPath } from './vo';
-
-/** Estimate VO duration from text length (at ~155 wpm = ~2.6 words/sec) */
-function estimateVoDuration(text: string): number {
-  const words = text.split(/\s+/).length;
-  return Math.ceil(words / 2.5) + VO_GAP_SECONDS;
-}
 
 // Auto-add VO URLs based on question text (hashed filenames via staticFile)
 function addVo(data: QuizVideoData): QuizVideoData {

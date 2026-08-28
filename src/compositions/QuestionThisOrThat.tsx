@@ -1,32 +1,17 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio } from 'remotion';
-import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
+import { AbsoluteFill, spring, interpolate } from 'remotion';
+import { OptionText, FONT_OPTION } from '../components/AutoText';
+import { QuestionCard } from '../components/QuestionCard';
 import { TimerBar } from '../components/TimerBar';
 import type { ThisOrThatQ } from '../types';
-import { getSpeedConfig } from '../types';
+import { useQuizTiming } from '../hooks/useQuizTiming';
 
 /**
  * QuestionThisOrThat: Glossy, premium two-card layout.
  * Subtle light sweep across cards, glass-morphism label area, glowing edges.
  */
 export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ question }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const spd = getSpeedConfig(question);
-
-  const voFrames = Math.ceil((question.voDuration || 0) * fps);
-  const quizFrame = Math.max(0, frame - voFrames);
-
-  const countdownFrames = question.timeLimit * fps;
-  const isRevealing = quizFrame >= countdownFrames;
-  const revealProgress = isRevealing
-    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : 0;
-
-  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
-
-  const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
-  const titleY = interpolate(frame, [0, 10], [-30, 0], { extrapolateRight: 'clamp' });
+  const { frame, fps, spd, voFrames, quizFrame, countdownFrames, isRevealing, revealProgress, timerProgress } = useQuizTiming(question);
 
   // Card entries
   const springA = spring({ frame: Math.max(0, frame - spd.entryDelay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
@@ -62,7 +47,7 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
     side: 'A' | 'B',
     image: string,
     label: string,
-    springVal: number,
+    _springVal: number,
     scaleVal: number,
     opacityVal: number,
     floatVal: number,
@@ -160,25 +145,7 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
   return (
     <AbsoluteFill>
       {/* QUESTION CARD — glass style */}
-      <div style={{
-        position: 'absolute',
-        top: 50, left: 100, right: 100,
-        display: 'flex', alignItems: 'center',
-        opacity: titleOpacity,
-        transform: `translateY(${titleY}px)`,
-      }}>
-        <div style={{
-          flex: 1, background: 'rgba(255,255,255,0.95)', borderRadius: 24,
-          padding: '28px 50px',
-          boxShadow: '0 10px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8)',
-          textAlign: 'center',
-          border: '1px solid rgba(255,255,255,0.6)',
-        }}>
-          <AutoText width={1500} maxSize={64} minSize={32} maxLines={2} color="#1a1a1a" shadow={false}>
-            {question.questionText}
-          </AutoText>
-        </div>
-      </div>
+      <QuestionCard text={question.questionText} isRevealing={isRevealing} revealProgress={revealProgress} />
 
       {/* TWO CARDS + OR */}
       <div style={{

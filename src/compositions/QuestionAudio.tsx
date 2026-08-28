@@ -1,12 +1,12 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio, Video } from 'remotion';
-import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
+import { AbsoluteFill, spring, interpolate, Audio, Video } from 'remotion';
+import { OptionText, FONT_OPTION } from '../components/AutoText';
+import { QuestionCard } from '../components/QuestionCard';
 import { TimerBar } from '../components/TimerBar';
 import type { AudioQ } from '../types';
-import { getSpeedConfig } from '../types';
+import { useQuizTiming } from '../hooks/useQuizTiming';
+import { LABELS, BADGE_COLORS } from '../config';
 
-const LABELS = ['A', 'B', 'C', 'D', 'E', 'F'];
-const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800', '#9C27B0', '#00897B'];
 
 /**
  * QuestionAudio: Audio plays invisibly. Options take full width.
@@ -15,27 +15,9 @@ const BADGE_COLORS = ['#E53935', '#43A047', '#1E88E5', '#FF9800', '#9C27B0', '#0
  * - Small animated speaker icon in question card to hint audio is playing
  */
 export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
-  const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const { frame, fps, spd, voFrames, mediaFrames, delayFrames, isVoPhase, isMediaPhase, quizFrame, countdownFrames, isRevealing, revealProgress, timerProgress } = useQuizTiming(question);
 
   const mediaRole = question.mediaRole || 'clue';
-  const spd = getSpeedConfig(question);
-  const mediaDuration = Math.min(question.mediaDuration || 0, 20);
-  const voFrames = Math.ceil((question.voDuration || 0) * fps);
-  const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0;
-  const delayFrames = voFrames + mediaFrames;
-  const isVoPhase = frame < voFrames;
-  const isMediaPhase = frame >= voFrames && frame < delayFrames;
-  const quizFrame = Math.max(0, frame - delayFrames);
-
-  const countdownFrames = question.timeLimit * fps;
-  const isRevealing = quizFrame >= countdownFrames;
-  const revealProgress = isRevealing
-    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : 0;
-
-  const timerProgress = (isVoPhase || isMediaPhase) ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
-  const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
 
   const isEven = question.options.length % 2 === 0;
   const isPlaying = isMediaPhase || (!isRevealing && mediaRole === 'ambient');
@@ -66,29 +48,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
       )}
 
       {/* QUESTION CARD */}
-      <div style={{
-        position: 'absolute',
-        top: 50, left: 100, right: 100,
-        display: 'flex', alignItems: 'center',
-        opacity: titleOpacity,
-      }}>
-        <div style={{
-          flex: 1, background: '#FFFFFF', borderRadius: 24,
-          padding: '28px 50px', boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
-          textAlign: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 24,
-        }}>
-          {/* Speaker icon */}
-          <span style={{
-            fontSize: 48, transform: `scale(${speakerPulse})`,
-            opacity: isPlaying ? 1 : 0.4,
-          }}>
-            {isPlaying ? '🔊' : '🔇'}
-          </span>
-          <AutoText width={1350} maxSize={64} minSize={32} maxLines={2} color="#1a1a1a" shadow={false}>
-            {question.questionText}
-          </AutoText>
-        </div>
-      </div>
+      <QuestionCard text={question.questionText} isRevealing={isRevealing} revealProgress={revealProgress} />
 
       {/* AUDIO SPECTRUM — full width during media phase, fades out */}
       {spectrumOpacity > 0 && (

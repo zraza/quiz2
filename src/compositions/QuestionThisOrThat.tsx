@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
+import { TimerBar } from '../components/TimerBar';
 import type { ThisOrThatQ } from '../types';
 import { getSpeedConfig } from '../types';
 
@@ -23,9 +24,6 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
     : 0;
 
   const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
-  const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
-  const timerUrgent = timerProgress < 0.2 && !isRevealing;
-  const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
 
   const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
   const titleY = interpolate(frame, [0, 10], [-30, 0], { extrapolateRight: 'clamp' });
@@ -222,23 +220,7 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
       </div>
 
       {/* TIMER BAR */}
-      {!isRevealing && frame >= voFrames && (
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: timerPulse,
-          background: 'rgba(0,0,0,0.12)',
-        }}>
-          <div style={{
-            position: 'absolute', top: 0, left: 0, bottom: 0,
-            width: `${timerProgress * 100}%`, background: barColor,
-            borderRadius: '0 4px 4px 0',
-          }}>
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: `linear-gradient(90deg, transparent ${((frame % 45) / 45) * 100 - 15}%, rgba(255,255,255,0.3) ${((frame % 45) / 45) * 100}%, transparent ${((frame % 45) / 45) * 100 + 15}%)`,
-            }} />
-          </div>
-        </div>
-      )}
+      <TimerBar progress={timerProgress} entryFrame={voFrames} visible={!isRevealing && frame >= voFrames} />
     </AbsoluteFill>
   );
 };

@@ -34,7 +34,7 @@ export const SIDE_MARGIN = 100;
 export const QUESTION_CARD_TOP = 50;
 export const CONTENT_TOP = 210;
 export const CONTENT_BOTTOM = 80;
-export const TIMER_HEIGHT = 28;
+export const TIMER_HEIGHT = 36;
 
 // ============ COLORS ============
 export const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6'];

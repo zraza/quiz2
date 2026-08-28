@@ -5,10 +5,11 @@ import type { MatchQ } from '../types';
 import { getSpeedConfig } from '../types';
 
 const ROW_COLORS = ['#E53935', '#1E88E5', '#43A047'];
+const ROW_COLORS_LIGHT = ['#FFEBEE', '#E3F2FD', '#E8F5E9']; // subtle tints
 
 /**
- * QuestionMatch: Two columns, 3 rows. Left fixed, right slides to correct positions.
- * Left: images. Right: white cards with text/flags that slide into place.
+ * QuestionMatch: Two columns, 3 rows.
+ * On reveal: pairs glow same colour, connecting beam between them, right card tints.
  */
 export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
   const frame = useCurrentFrame();
@@ -25,6 +26,11 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
     ? interpolate(frame, [countdownFrames + 5, countdownFrames + 22], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
+  // Pop effect after slide completes
+  const popProgress = isRevealing
+    ? interpolate(frame, [countdownFrames + 22, countdownFrames + 28, countdownFrames + 34], [0, 1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    : 0;
+
   const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
@@ -36,7 +42,6 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
   const glowPulse = 0.3 + Math.sin(frame * 0.06) * 0.12;
   const rowCount = question.left.length;
 
-  // Content area height: 1080 - 210(top) - 80(bottom) = 790
   const contentHeight = 790;
   const ROW_GAP = 24;
   const rowHeight = (contentHeight - ROW_GAP * (rowCount - 1)) / rowCount;
@@ -47,6 +52,11 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
     const targetRow = question.correctOrder.indexOf(dp);
     targetRowForDisplay.push(targetRow);
   }
+
+  // Beam pulse after match
+  const beamPulse = isRevealing && revealProgress > 0.75
+    ? 0.5 + Math.sin((frame - countdownFrames) * 0.15) * 0.3
+    : 0;
 
   return (
     <AbsoluteFill>
@@ -85,18 +95,26 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
             const cardSweep = ((frame * 1.2 + i * 50) % 220) - 60;
             const topY = i * (rowHeight + ROW_GAP);
 
+            // Glow when matched
+            const matched = revealProgress > 0.75;
+            const matchScale = 1 + popProgress * 0.03;
+
             return (
               <div key={`left-${i}`} style={{
                 position: 'absolute',
                 left: 0, right: 0,
                 top: topY, height: rowHeight,
-                transform: `scale(${entryScale})`, opacity: entryOpacity,
+                transform: `scale(${entryScale * matchScale})`, opacity: entryOpacity,
               }}>
                 <div style={{
                   position: 'absolute', inset: 0,
                   borderRadius: 20, overflow: 'hidden',
-                  border: `3px solid rgba(255,255,255,${0.4 + glowPulse})`,
-                  boxShadow: `0 6px 24px rgba(0,0,0,0.2), 0 0 ${8 + glowPulse * 12}px ${ROW_COLORS[i]}33`,
+                  border: matched
+                    ? `4px solid ${ROW_COLORS[i]}`
+                    : `3px solid rgba(255,255,255,${0.4 + glowPulse})`,
+                  boxShadow: matched
+                    ? `0 6px 24px rgba(0,0,0,0.2), 0 0 25px ${ROW_COLORS[i]}55, inset 0 0 20px ${ROW_COLORS[i]}15`
+                    : `0 6px 24px rgba(0,0,0,0.2), 0 0 ${8 + glowPulse * 12}px ${ROW_COLORS[i]}33`,
                 }}>
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -123,10 +141,27 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                   )}
                   {/* Top shine */}
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${0.3 + glowPulse * 0.3}), transparent)` }} />
-                  {/* Color dot */}
-                  <div style={{ position: 'absolute', top: 12, left: 12, width: 14, height: 14, borderRadius: '50%', background: ROW_COLORS[i], boxShadow: `0 0 8px ${ROW_COLORS[i]}` }} />
                 </div>
               </div>
+            );
+          })}
+        </div>
+
+        {/* CENTER — connecting beams on reveal */}
+        <div style={{ width: 50, position: 'relative', flexShrink: 0 }}>
+          {isRevealing && revealProgress > 0.75 && question.left.map((_, i) => {
+            const topY = i * (rowHeight + ROW_GAP) + rowHeight / 2;
+            return (
+              <div key={`beam-${i}`} style={{
+                position: 'absolute',
+                left: -10, right: -10,
+                top: topY - 3,
+                height: 6,
+                borderRadius: 3,
+                background: `linear-gradient(90deg, ${ROW_COLORS[i]}, ${ROW_COLORS[i]}88, ${ROW_COLORS[i]})`,
+                opacity: interpolate(revealProgress, [0.75, 0.9], [0, beamPulse + 0.3], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
+                boxShadow: `0 0 12px ${ROW_COLORS[i]}88, 0 0 4px ${ROW_COLORS[i]}`,
+              }} />
             );
           })}
         </div>
@@ -139,48 +174,46 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
             const entryScale = interpolate(s, [0, 1], [0.85, 1]);
             const entryOpacity = interpolate(s, [0, 1], [0, 1]);
 
-            // Slide from current row to target row
             const startY = displayPos * (rowHeight + ROW_GAP);
             const targetRow = targetRowForDisplay[displayPos];
             const endY = targetRow * (rowHeight + ROW_GAP);
             const currentY = startY + (endY - startY) * slideProgress;
 
             const matchedColor = ROW_COLORS[targetRow];
+            const matched = revealProgress > 0.75;
+            const matchScale = 1 + popProgress * 0.03;
+
+            // Tint the white card with match colour after landing
+            const bgColor = matched
+              ? ROW_COLORS_LIGHT[targetRow]
+              : '#FFFFFF';
 
             return (
               <div key={`right-${displayPos}`} style={{
                 position: 'absolute',
                 left: 0, right: 0,
                 top: currentY, height: rowHeight,
-                transform: `scale(${entryScale})`, opacity: entryOpacity,
+                transform: `scale(${entryScale * matchScale})`, opacity: entryOpacity,
               }}>
                 <div style={{
                   position: 'absolute', inset: 0,
                   borderRadius: 20, overflow: 'hidden',
-                  background: '#FFFFFF',
-                  border: isRevealing && revealProgress > 0.7
+                  background: bgColor,
+                  border: matched
                     ? `4px solid ${matchedColor}`
                     : '4px solid rgba(0,0,0,0.06)',
-                  boxShadow: isRevealing && revealProgress > 0.7
+                  boxShadow: matched
                     ? `0 6px 24px rgba(0,0,0,0.1), 0 0 20px ${matchedColor}33`
                     : '0 6px 24px rgba(0,0,0,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  transition: 'background 0.3s',
                 }}>
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <OptionText width={600} maxSize={56} minSize={26} color="#1a1a1a">
+                    <OptionText width={600} maxSize={56} minSize={26} color={matched ? matchedColor : '#1a1a1a'}>
                       {item.label}
                     </OptionText>
-                  )}
-                  {/* Color dot on reveal */}
-                  {isRevealing && revealProgress > 0.7 && (
-                    <div style={{
-                      position: 'absolute', top: 14, right: 14,
-                      width: 16, height: 16, borderRadius: '50%',
-                      background: matchedColor, boxShadow: `0 0 10px ${matchedColor}`,
-                      opacity: interpolate(revealProgress, [0.7, 1], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
-                    }} />
                   )}
                 </div>
               </div>

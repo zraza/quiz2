@@ -56,7 +56,7 @@ export const mockQuizData: QuizVideoData = addVo({
       correctAnswer: 'The Godfather',
       options: ['Goodfellas', 'The Godfather', 'Scarface', 'Casino'],
       mediaUrl: 'https://clip.cafe/videos/dad-s357.mp4',
-      mediaDuration: 8,
+      mediaDuration: 5,
       mediaFit: 'contain',
       mediaRole: 'clue',
     },
@@ -144,7 +144,7 @@ export const mockQuizData: QuizVideoData = addVo({
       audioTitle: '🎵 LISTEN CAREFULLY...',
       options: ['The Beatles', 'Queen', 'Led Zeppelin', 'Pink Floyd'],
       mediaUrl: 'https://clip.cafe/videos/dad-s357.mp4',
-      mediaDuration: 10,
+      mediaDuration: 6,
     },
     {
       id: 'q12',

@@ -133,8 +133,11 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 
     const bgColor = BG_COLORS[idx % BG_COLORS.length];
 
-    // TRANSITION — "Question X"
-    const transText = `Question ${['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'][question.questionNumber - 1] || question.questionNumber}.`;
+    // TRANSITION — "Question X" or "Bonus round"
+    const isBonus = question.type === 'zoom-in' || question.type === 'blur-reveal';
+    const transText = isBonus
+      ? 'Bonus round!'
+      : `Question ${['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'][question.questionNumber - 1] || question.questionNumber}.`;
     sequences.push(
       <Sequence key={`trans-${question.id}`} from={currentFrame} durationInFrames={TRANSITION_FRAMES}>
         <AbsoluteFill>

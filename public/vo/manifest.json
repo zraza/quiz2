@@ -363,98 +363,105 @@
     "text": "What famous landmark is this?",
     "hash": "104ba9216860",
     "file": "104ba9216860.mp3",
-    "path": "/vo/104ba9216860.mp3",
-    "duration": 2.53
+    "path": "/vo/104ba9216860.mp3"
   },
   "q17-reveal": {
     "text": "The answer is Colosseum.",
     "hash": "28065c80c23b",
     "file": "28065c80c23b.mp3",
-    "path": "/vo/28065c80c23b.mp3",
-    "duration": 2.17
+    "path": "/vo/28065c80c23b.mp3"
   },
   "q18": {
     "text": "Which animal is hidden in this image?",
     "hash": "1e0830226074",
     "file": "1e0830226074.mp3",
-    "path": "/vo/1e0830226074.mp3",
-    "duration": 2.51
+    "path": "/vo/1e0830226074.mp3"
   },
   "q18-reveal": {
     "text": "The answer is Elephant.",
     "hash": "11f0b9a0e201",
     "file": "11f0b9a0e201.mp3",
-    "path": "/vo/11f0b9a0e201.mp3",
-    "duration": 1.91
+    "path": "/vo/11f0b9a0e201.mp3"
   },
   "q19": {
     "text": "True or false? The Great Wall of China is visible from space with the naked eye.",
     "hash": "1499014ace2b",
     "file": "1499014ace2b.mp3",
-    "path": "/vo/1499014ace2b.mp3",
-    "duration": 5.62
+    "path": "/vo/1499014ace2b.mp3"
   },
   "q19-reveal": {
     "text": "The answer is false.",
     "hash": "1264f74a18ee",
     "file": "1264f74a18ee.mp3",
-    "path": "/vo/1264f74a18ee.mp3",
-    "duration": 2.04
+    "path": "/vo/1264f74a18ee.mp3"
   },
   "q20": {
     "text": "Which one does NOT belong?",
     "hash": "1d3e9f70b107",
     "file": "1d3e9f70b107.mp3",
-    "path": "/vo/1d3e9f70b107.mp3",
-    "duration": 2.17
+    "path": "/vo/1d3e9f70b107.mp3"
   },
   "q20-reveal": {
     "text": "The answer is Mercury.",
     "hash": "876644331a51",
     "file": "876644331a51.mp3",
-    "path": "/vo/876644331a51.mp3",
-    "duration": 1.96
+    "path": "/vo/876644331a51.mp3"
   },
   "q21": {
     "text": "Finish the lyric!",
     "hash": "fcf2c1a6825e",
     "file": "fcf2c1a6825e.mp3",
-    "path": "/vo/fcf2c1a6825e.mp3",
-    "duration": 1.44
+    "path": "/vo/fcf2c1a6825e.mp3"
   },
   "q21-reveal": {
     "text": "The answer is Galileo.",
     "hash": "141b968f8268",
     "file": "141b968f8268.mp3",
-    "path": "/vo/141b968f8268.mp3",
-    "duration": 2.04
+    "path": "/vo/141b968f8268.mp3"
   },
   "q22": {
     "text": "What connects these four things?",
     "hash": "a2a803f6b676",
     "file": "a2a803f6b676.mp3",
-    "path": "/vo/a2a803f6b676.mp3",
-    "duration": 2.4
+    "path": "/vo/a2a803f6b676.mp3"
   },
   "q22-reveal": {
     "text": "The answer is They are all types of bridge.",
     "hash": "1d609f446c5d",
     "file": "1d609f446c5d.mp3",
-    "path": "/vo/1d609f446c5d.mp3",
-    "duration": 3.06
+    "path": "/vo/1d609f446c5d.mp3"
   },
   "trans-21": {
     "text": "Question twenty one.",
     "hash": "6974459ac5b8",
     "file": "6974459ac5b8.mp3",
-    "path": "/vo/6974459ac5b8.mp3",
-    "duration": 1.91
+    "path": "/vo/6974459ac5b8.mp3"
   },
   "trans-22": {
     "text": "Question twenty two.",
     "hash": "46423e912c03",
     "file": "46423e912c03.mp3",
-    "path": "/vo/46423e912c03.mp3",
-    "duration": 1.93
+    "path": "/vo/46423e912c03.mp3"
+  },
+  "bonus-round": {
+    "text": "Bonus round!",
+    "hash": "1994318b3d85",
+    "file": "1994318b3d85.mp3",
+    "path": "/vo/1994318b3d85.mp3",
+    "duration": 1.49
+  },
+  "match-reveal": {
+    "text": "Here are the correct matches.",
+    "hash": "1958c851c613",
+    "file": "1958c851c613.mp3",
+    "path": "/vo/1958c851c613.mp3",
+    "duration": 2.17
+  },
+  "order-reveal": {
+    "text": "Here is the correct order.",
+    "hash": "1e9f22149255",
+    "file": "1e9f22149255.mp3",
+    "path": "/vo/1e9f22149255.mp3",
+    "duration": 1.83
   }
 }

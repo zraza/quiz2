@@ -9,7 +9,12 @@ function addVo(data: QuizVideoData): QuizVideoData {
     questions: data.questions.map(q => ({
       ...q,
       voUrl: q.voUrl || voPath(q.questionText),
-      voRevealUrl: q.voRevealUrl || voPath(`The answer is ${q.correctAnswer}.`),
+      voRevealUrl: q.voRevealUrl || voPath(
+        q.type === 'match' ? 'Here are the correct matches.' :
+        q.type === 'order' ? 'Here is the correct order.' :
+        q.type === 'odd-one-out' ? `The odd one out is ${q.correctAnswer}.` :
+        `The answer is ${q.correctAnswer}.`
+      ),
       voDuration: q.voDuration || estimateVoDuration(q.questionText),
     })),
   };

@@ -142,6 +142,11 @@ function getAllVoTexts() {
     { key: 'q22-reveal', text: 'The answer is They are all types of bridge.' },
     { key: 'trans-21', text: 'Question twenty one.' },
     { key: 'trans-22', text: 'Question twenty two.' },
+    { key: 'bonus-round', text: 'Bonus round!' },
+
+    // === MATCH/ORDER REVEALS ===
+    { key: 'match-reveal', text: 'Here are the correct matches.' },
+    { key: 'order-reveal', text: 'Here is the correct order.' },
 
     // === TIMER WARNINGS ===
     { key: 'times-up', text: "Time's up!" },

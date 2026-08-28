@@ -87,7 +87,7 @@ export const QuestionOrder: React.FC<{ question: OrderQ }> = ({ question }) => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     <OptionText width={cardWidth - 60} maxSize={44} minSize={22} color="#fff">
-                      {item.label}
+                      {isRevealing && item.revealLabel ? item.revealLabel : item.label}
                     </OptionText>
                   </div>
                 )}
@@ -110,7 +110,7 @@ export const QuestionOrder: React.FC<{ question: OrderQ }> = ({ question }) => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                   }}>
                     <OptionText width={cardWidth - 60} maxSize={36} minSize={18} color="#fff">
-                      {item.label}
+                      {isRevealing && item.revealLabel ? item.revealLabel : item.label}
                     </OptionText>
                   </div>
                 )}

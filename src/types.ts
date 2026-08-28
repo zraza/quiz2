@@ -134,7 +134,7 @@ export interface ThisOrThatQ extends BaseQuestion {
 export interface OrderQ extends BaseQuestion {
   type: 'order';
   /** Items in CORRECT order (index 0 = first/smallest/oldest) */
-  items: { label: string; image?: string }[];
+  items: { label: string; revealLabel?: string; image?: string }[];
   /** The shuffled display order (indices into items array). e.g. [2,0,3,1] */
   displayOrder: number[];
 }

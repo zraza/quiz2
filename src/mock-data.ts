@@ -1,13 +1,14 @@
 import type { QuizVideoData } from './types';
+import { voPath } from './vo';
 
-// Auto-add VO URLs based on question IDs
+// Auto-add VO URLs based on question text (hashed filenames)
 function addVo(data: QuizVideoData): QuizVideoData {
   return {
     ...data,
     questions: data.questions.map(q => ({
       ...q,
-      voUrl: q.voUrl || `/vo/${q.id}.m4a`,
-      voRevealUrl: q.voRevealUrl || `/vo/${q.id}-reveal.m4a`,
+      voUrl: q.voUrl || voPath(q.questionText),
+      voRevealUrl: q.voRevealUrl || voPath(`The answer is ${q.correctAnswer}.`),
     })),
   };
 }

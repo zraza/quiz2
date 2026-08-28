@@ -1,6 +1,7 @@
 import React from 'react';
 import { AbsoluteFill, Sequence, Audio } from 'remotion';
 import type { QuizVideoData, QuizQuestion } from '../types';
+import { voPath } from '../vo';
 import { Background } from '../components/Background';
 import { IntroScreen } from './IntroScreen';
 import { GetReady } from './GetReady';
@@ -86,7 +87,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         <Background color="#5BC0BE" />
         <IntroScreen title={data.title} questionCount={questions.length} />
       </AbsoluteFill>
-      <Audio src="/vo/intro.m4a" />
+      <Audio src={voPath('Welcome to the quiz! Can you score ten out of ten? Lets find out.')} />
     </Sequence>
   );
   currentFrame += INTRO_DURATION;
@@ -112,7 +113,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
             <Background color="#E85D75" />
             <HalfwayScreen />
           </AbsoluteFill>
-          <Audio src="/vo/halfway.m4a" />
+          <Audio src={voPath('Halfway there! How are you doing? Drop your score in the comments!')} />
         </Sequence>
       );
       currentFrame += HALFWAY_DURATION;
@@ -121,12 +122,14 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
     const bgColor = BG_COLORS[idx % BG_COLORS.length];
 
     // TRANSITION — "Question X"
+    const transText = `Question ${['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'][question.questionNumber - 1] || question.questionNumber}.`;
     sequences.push(
       <Sequence key={`trans-${question.id}`} from={currentFrame} durationInFrames={TRANSITION_DURATION}>
         <AbsoluteFill>
           <Background color={bgColor} />
           <QuestionTransition questionNumber={question.questionNumber} totalQuestions={question.totalQuestions} />
         </AbsoluteFill>
+        <Audio src={voPath(transText)} volume={1} />
       </Sequence>
     );
     currentFrame += TRANSITION_DURATION;
@@ -162,7 +165,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         <Background color="#4CAF50" />
         <OutroScreen totalQuestions={questions.length} />
       </AbsoluteFill>
-      <Audio src="/vo/outro.m4a" />
+      <Audio src={voPath('Quiz complete! How did you do? Subscribe for more quizzes every week!')} />
     </Sequence>
   );
 

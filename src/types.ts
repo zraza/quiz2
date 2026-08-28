@@ -45,6 +45,8 @@ export interface BaseQuestion {
   voUrl?: string;
   /** Voiceover for the answer reveal */
   voRevealUrl?: string;
+  /** Duration of the question VO in seconds (timer starts after this) */
+  voDuration?: number;
   /** URL to video/audio to play before timer starts (mp4, mp3, etc.) */
   mediaUrl?: string;
   /** How long to play the media in seconds (max 20). Only used when mediaRole='clue'. */

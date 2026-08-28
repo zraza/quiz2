@@ -21,9 +21,12 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
   const spd = getSpeedConfig(question);
   const mediaRole = question.mediaRole || 'clue';
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
-  const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0; // ambient = no delay
-  const isMediaPhase = frame < mediaFrames;
-  const quizFrame = Math.max(0, frame - mediaFrames); // frame relative to quiz start
+  const voFrames = Math.ceil((question.voDuration || 0) * fps);
+  const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0;
+  const delayFrames = voFrames + mediaFrames; // total delay before timer starts
+  const isVoPhase = frame < voFrames;
+  const isMediaPhase = frame >= voFrames && frame < delayFrames;
+  const quizFrame = Math.max(0, frame - delayFrames); // frame relative to timer start
 
   const countdownFrames = question.timeLimit * fps;
   const isRevealing = quizFrame >= countdownFrames;
@@ -32,7 +35,7 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
     : 0;
 
   // Timer bar
-  const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
+  const timerProgress = (isVoPhase || isMediaPhase) ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
   const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
@@ -77,18 +80,18 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
       {(() => {
         // Animate video width: 100% during media → 46% after
         // Transition happens over 15 frames after media ends
-        const transitionFrame = Math.max(0, frame - mediaFrames);
-        const videoWidthPct = isMediaPhase
+        const transitionFrame = Math.max(0, frame - delayFrames);
+        const videoWidthPct = (isVoPhase || isMediaPhase)
           ? 100
-          : mediaFrames > 0
+          : delayFrames > 0
             ? interpolate(transitionFrame, [0, 15], [100, 46], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             : 46;
-        const optionsOpacity = isMediaPhase
+        const optionsOpacity = (isVoPhase || isMediaPhase)
           ? 0
-          : mediaFrames > 0
+          : delayFrames > 0
             ? interpolate(transitionFrame, [8, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             : 1;
-        const contentGap = isMediaPhase ? 0 : interpolate(Math.min(transitionFrame, 15), [0, 15], [0, 60], { extrapolateRight: 'clamp' });
+        const contentGap = (isVoPhase || isMediaPhase) ? 0 : interpolate(Math.min(transitionFrame, 15), [0, 15], [0, 60], { extrapolateRight: 'clamp' });
 
         return (
           <div style={{
@@ -257,8 +260,8 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
         <Audio src={question.voRevealUrl} startFrom={0} volume={1} />
       )}
 
-      {/* TIMER BAR — hidden during media phase */}
-      {!isRevealing && !isMediaPhase && (
+      {/* TIMER BAR — hidden during VO and media phase */}
+      {!isRevealing && !isVoPhase && !isMediaPhase && (
         <div style={{
           position: 'absolute',
           bottom: 0,

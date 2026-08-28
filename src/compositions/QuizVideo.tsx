@@ -30,7 +30,8 @@ const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4C
 function getQuestionDuration(q: QuizQuestion): number {
   const role = q.mediaRole || 'clue';
   const media = role === 'clue' ? Math.min(q.mediaDuration || 0, 20) : 0;
-  return (media + q.timeLimit + REVEAL_SECONDS) * FPS;
+  const vo = q.voDuration || 0;
+  return (vo + media + q.timeLimit + REVEAL_SECONDS) * FPS;
 }
 
 function renderQuestion(question: QuizQuestion): React.ReactNode {
@@ -136,8 +137,9 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 
     // QUESTION
     const duration = getQuestionDuration(question);
+    const voDelay = Math.ceil((question.voDuration || 0) * FPS);
     const mediaDelay = (question.mediaRole || 'clue') === 'clue' ? Math.min(question.mediaDuration || 0, 20) * FPS : 0;
-    const revealStartFrame = mediaDelay + question.timeLimit * FPS;
+    const revealStartFrame = voDelay + mediaDelay + question.timeLimit * FPS;
 
     sequences.push(
       <Sequence key={question.id} from={currentFrame} durationInFrames={duration}>

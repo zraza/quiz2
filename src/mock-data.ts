@@ -1,6 +1,12 @@
 import type { QuizVideoData } from './types';
 import { voPath } from './vo';
 
+/** Estimate VO duration from text length (at ~155 wpm = ~2.6 words/sec) */
+function estimateVoDuration(text: string): number {
+  const words = text.split(/\s+/).length;
+  return Math.ceil(words / 2.5) + 1; // +1 second buffer
+}
+
 // Auto-add VO URLs based on question text (hashed filenames via staticFile)
 function addVo(data: QuizVideoData): QuizVideoData {
   return {
@@ -9,6 +15,7 @@ function addVo(data: QuizVideoData): QuizVideoData {
       ...q,
       voUrl: q.voUrl || voPath(q.questionText),
       voRevealUrl: q.voRevealUrl || voPath(`The answer is ${q.correctAnswer}.`),
+      voDuration: q.voDuration || estimateVoDuration(q.questionText),
     })),
   };
 }

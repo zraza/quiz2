@@ -20,9 +20,12 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const mediaRole = question.mediaRole || 'clue';
   const spd = getSpeedConfig(question);
   const mediaDuration = Math.min(question.mediaDuration || 0, 20);
+  const voFrames = Math.ceil((question.voDuration || 0) * fps);
   const mediaFrames = mediaRole === 'clue' ? mediaDuration * fps : 0;
-  const isMediaPhase = frame < mediaFrames;
-  const quizFrame = Math.max(0, frame - mediaFrames);
+  const delayFrames = voFrames + mediaFrames;
+  const isVoPhase = frame < voFrames;
+  const isMediaPhase = frame >= voFrames && frame < delayFrames;
+  const quizFrame = Math.max(0, frame - delayFrames);
 
   const countdownFrames = question.timeLimit * fps;
   const isRevealing = quizFrame >= countdownFrames;
@@ -30,7 +33,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
     ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
-  const timerProgress = isMediaPhase ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
+  const timerProgress = (isVoPhase || isMediaPhase) ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
 
@@ -41,15 +44,15 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
   const speakerPulse = isPlaying ? 0.9 + Math.sin(frame * 0.2) * 0.1 : 0.8;
 
   // Transition from spectrum to options
-  const transitionFrame = Math.max(0, frame - mediaFrames);
-  const spectrumOpacity = isMediaPhase
+  const transitionFrame = Math.max(0, frame - delayFrames);
+  const spectrumOpacity = (isVoPhase || isMediaPhase)
     ? 1
-    : mediaFrames > 0
+    : delayFrames > 0
       ? interpolate(transitionFrame, [0, 12], [1, 0], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
       : 0;
-  const optionsOpacity = isMediaPhase
+  const optionsOpacity = (isVoPhase || isMediaPhase)
     ? 0
-    : mediaFrames > 0
+    : delayFrames > 0
       ? interpolate(transitionFrame, [8, 20], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
       : 1;
 
@@ -211,7 +214,7 @@ export const QuestionAudio: React.FC<{ question: AudioQ }> = ({ question }) => {
       </div>
 
       {/* TIMER BAR */}
-      {!isRevealing && !isMediaPhase && (
+      {!isRevealing && !isVoPhase && !isMediaPhase && (
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 28, background: 'rgba(0,0,0,0.15)' }}>
           <div style={{
             position: 'absolute', top: 0, left: 0, bottom: 0,

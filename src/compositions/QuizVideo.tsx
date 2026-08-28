@@ -43,6 +43,7 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
           questionText={question.questionText}
           timeLimit={question.timeLimit}
           answer={question.correctAnswer}
+          voDuration={question.voDuration}
         />
       );
     case 'image-open':
@@ -53,6 +54,7 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
           timeLimit={question.timeLimit}
           answer={question.correctAnswer}
           answerImageUrl={question.answerImageUrl}
+          voDuration={question.voDuration}
         />
       );
     case 'audio':

@@ -9,6 +9,7 @@ interface Props {
   answer: string;
   /** If provided, shows this image in the reveal instead of just text */
   answerImageUrl?: string;
+  voDuration?: number;
 }
 
 /**
@@ -24,14 +25,17 @@ interface Props {
  * - Image shrinks/moves up
  * - Answer appears below (text, or text + image)
  */
-export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, timeLimit, answer, answerImageUrl }) => {
+export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, timeLimit, answer, answerImageUrl, voDuration = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const voFrames = Math.ceil(voDuration * fps);
+  const quizFrame = Math.max(0, frame - voFrames);
+
   const countdownFrames = timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   // Timer

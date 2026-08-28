@@ -15,18 +15,21 @@ export const QuestionOrder: React.FC<{ question: OrderQ }> = ({ question }) => {
   const { fps } = useVideoConfig();
   const spd = getSpeedConfig(question);
 
+  const voFrames = Math.ceil((question.voDuration || 0) * fps);
+  const quizFrame = Math.max(0, frame - voFrames);
+
   const countdownFrames = question.timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 25], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 25], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   // Eased reveal for smoother slide
   const slideProgress = isRevealing
-    ? interpolate(frame, [countdownFrames + 5, countdownFrames + 22], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames + 5, countdownFrames + 22], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
   const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
@@ -176,7 +179,7 @@ export const QuestionOrder: React.FC<{ question: OrderQ }> = ({ question }) => {
       </div>
 
       {/* TIMER BAR */}
-      {!isRevealing && (
+      {!isRevealing && frame >= voFrames && (
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: timerPulse, background: 'rgba(0,0,0,0.12)' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${timerProgress * 100}%`, background: barColor, borderRadius: '0 4px 4px 0' }}>
             <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, transparent ${((frame % 45) / 45) * 100 - 15}%, rgba(255,255,255,0.3) ${((frame % 45) / 45) * 100}%, transparent ${((frame % 45) / 45) * 100 + 15}%)` }} />

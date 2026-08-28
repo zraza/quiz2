@@ -22,13 +22,16 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
   const { fps } = useVideoConfig();
   const spd = getSpeedConfig(question);
 
+  const voFrames = Math.ceil((question.voDuration || 0) * fps);
+  const quizFrame = Math.max(0, frame - voFrames);
+
   const countdownFrames = question.timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + spd.revealFrames], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const titleOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: 'clamp' });
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
@@ -159,7 +162,7 @@ export const QuestionImageOptions: React.FC<{ question: ImageOptionsQ }> = ({ qu
       </div>
 
       {/* TIMER BAR */}
-      {!isRevealing && (
+      {!isRevealing && frame >= voFrames && (
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: timerPulse, background: 'rgba(0,0,0,0.15)' }}>
           <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: `${timerProgress * 100}%`, background: barColor }}>
             <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(90deg, transparent ${((frame % 45) / 45) * 100 - 15}%, rgba(255,255,255,0.2) ${((frame % 45) / 45) * 100}%, transparent ${((frame % 45) / 45) * 100 + 15}%)` }} />

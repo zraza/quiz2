@@ -7,6 +7,7 @@ interface Props {
   questionText: string;
   timeLimit: number;
   answer: string;
+  voDuration?: number;
 }
 
 /**
@@ -21,18 +22,21 @@ interface Props {
  * 
  * Used for: open-ended questions like "What year was X?", "Name the capital of..."
  */
-export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, timeLimit, answer }) => {
+export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, timeLimit, answer, voDuration = 0 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
+  const voFrames = Math.ceil(voDuration * fps);
+  const quizFrame = Math.max(0, frame - voFrames);
+
   const countdownFrames = timeLimit * fps;
-  const isRevealing = frame >= countdownFrames;
+  const isRevealing = quizFrame >= countdownFrames;
   const revealProgress = isRevealing
-    ? interpolate(frame, [countdownFrames, countdownFrames + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    ? interpolate(quizFrame, [countdownFrames, countdownFrames + 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
   // Timer
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
   const timerPulse = timerUrgent ? 28 + Math.sin(frame * 0.5) * 6 : 28;
@@ -159,7 +163,7 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
       )}
 
       {/* TIMER BAR */}
-      {!isRevealing && (
+      {!isRevealing && frame >= voFrames && (
         <div style={{
           position: 'absolute',
           bottom: 0,

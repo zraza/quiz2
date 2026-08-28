@@ -50,9 +50,9 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
   const floatA = Math.sin(frame * 0.025) * 2;
   const floatB = Math.sin(frame * 0.025 + 1.5) * 2;
 
-  // Light sweep — a diagonal highlight that slowly moves across both cards
-  const sweepPosition = ((frame * 0.8) % 200) - 50; // moves left to right over time
-  const sweepPositionB = ((frame * 0.8 + 60) % 200) - 50; // offset for card B
+  // Light sweep — a diagonal highlight that moves across both cards
+  const sweepPosition = ((frame * 1.5) % 220) - 60; // faster, wider range
+  const sweepPositionB = ((frame * 1.5 + 80) % 220) - 60; // offset for card B
 
   // Glow pulse on card edges — subtle breathing
   const glowPulse = 0.3 + Math.sin(frame * 0.06) * 0.15;
@@ -97,11 +97,11 @@ export const QuestionThisOrThat: React.FC<{ question: ThisOrThatQ }> = ({ questi
             position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover',
           }} />
 
-          {/* Subtle light sweep — diagonal shine moving across the image */}
+          {/* Light sweep — diagonal shine moving across the image */}
           {!isRevealing && (
             <div style={{
               position: 'absolute', inset: 0,
-              background: `linear-gradient(115deg, transparent ${sweep - 20}%, rgba(255,255,255,0.08) ${sweep}%, rgba(255,255,255,0.12) ${sweep + 5}%, transparent ${sweep + 25}%)`,
+              background: `linear-gradient(115deg, transparent ${sweep - 30}%, rgba(0,0,0,0.03) ${sweep - 10}%, rgba(255,255,255,0.25) ${sweep}%, rgba(255,255,255,0.4) ${sweep + 4}%, rgba(255,255,255,0.25) ${sweep + 8}%, rgba(0,0,0,0.03) ${sweep + 18}%, transparent ${sweep + 30}%)`,
               pointerEvents: 'none',
             }} />
           )}

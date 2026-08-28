@@ -21,16 +21,14 @@ export const TimerBar: React.FC<Props> = ({ progress, entryFrame, visible }) => 
 
   const sinceEntry = Math.max(0, frame - entryFrame);
 
-  // Entry: scale Y from 0 → 1 (bar "pops up" from nothing)
+  // Entry: scale Y from 0 → 1 (bar slides up from bottom)
   const scaleY = interpolate(sinceEntry, [0, 10], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  // Fill sweeps in (slight delay)
-  const fillPct = sinceEntry < 20
-    ? interpolate(sinceEntry, [6, 20], [0, progress * 100], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-    : progress * 100;
+  // Always show real progress (starts at 100%, counts down)
+  const fillPct = progress * 100;
 
   // Urgent pulse
-  const urgent = progress < 0.2 && progress > 0 && sinceEntry > 20;
+  const urgent = progress < 0.2 && progress > 0 && sinceEntry > 10;
   const pulse = urgent ? Math.sin(frame * 0.4) * 4 : 0;
   const height = TIMER_HEIGHT + pulse;
 

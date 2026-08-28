@@ -39,7 +39,7 @@ export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, t
     : 0;
 
   // Timer
-  const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
+  const timerProgress = frame < voFrames ? 1 : Math.max(0, Math.min(1, (countdownFrames - quizFrame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
 
   const titleOpacity = interpolate(frame, [0, 10], [0, 1], { extrapolateRight: 'clamp' });
@@ -191,7 +191,7 @@ export const QuestionImage: React.FC<Props> = ({ questionNumber, questionText, t
       )}
 
       {/* TIMER BAR */}
-      {!isRevealing && (
+      {!isRevealing && frame >= voFrames && (
         <div style={{
           position: 'absolute',
           bottom: 0,

@@ -1,5 +1,5 @@
 import type { QuizVideoData } from './types';
-import { VO_GAP_SECONDS } from './types';
+import { VO_GAP_SECONDS } from './config';
 import { voPath } from './vo';
 
 /** Estimate VO duration from text length (at ~155 wpm = ~2.6 words/sec) */

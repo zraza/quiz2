@@ -24,9 +24,6 @@ export const DEFAULT_SPEEDS: Record<QuestionType, Speed> = {
   'match': 'normal',             // need time to match pairs
 };
 
-/** Gap in seconds between VO ending and timer starting */
-export const VO_GAP_SECONDS = 1;
-
 /** Speed multipliers for animation timings */
 export const SPEED_CONFIG = {
   slow: { entryDelay: 5, entryGap: 3, revealFrames: 18, springDamping: 12, springStiffness: 160, mass: 0.9 },

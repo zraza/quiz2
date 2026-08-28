@@ -2,6 +2,7 @@ import React from 'react';
 import { AbsoluteFill, Sequence, Audio } from 'remotion';
 import type { QuizVideoData, QuizQuestion } from '../types';
 import { voPath } from '../vo';
+import { FPS, INTRO_FRAMES, GETREADY_FRAMES, TRANSITION_FRAMES, HALFWAY_FRAMES, OUTRO_FRAMES, REVEAL_SECONDS, MAX_MEDIA_SECONDS, BG_COLORS } from '../config';
 import { Background } from '../components/Background';
 import { IntroScreen } from './IntroScreen';
 import { GetReady } from './GetReady';
@@ -17,19 +18,9 @@ import { QuestionMatch } from './QuestionMatch';
 import { HalfwayScreen } from './HalfwayScreen';
 import { OutroScreen } from './OutroScreen';
 
-const FPS = 30;
-const INTRO_DURATION = 5 * FPS;
-const GETREADY_DURATION = 3 * FPS;
-const TRANSITION_DURATION = Math.round(1.5 * FPS);  // 1.5 seconds between questions
-const HALFWAY_DURATION = 3 * FPS;
-const OUTRO_DURATION = 5 * FPS;
-const REVEAL_SECONDS = 3;
-
-const BG_COLORS = ['#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6', '#E85D75', '#F4A942', '#5BC0BE', '#6B4CE6'];
-
 function getQuestionDuration(q: QuizQuestion): number {
   const role = q.mediaRole || 'clue';
-  const media = role === 'clue' ? Math.min(q.mediaDuration || 0, 20) : 0;
+  const media = role === 'clue' ? Math.min(q.mediaDuration || 0, MAX_MEDIA_SECONDS) : 0;
   const vo = q.voDuration || 0;
   return (vo + media + q.timeLimit + REVEAL_SECONDS) * FPS;
 }
@@ -85,7 +76,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 
   // INTRO
   sequences.push(
-    <Sequence key="intro" from={currentFrame} durationInFrames={INTRO_DURATION}>
+    <Sequence key="intro" from={currentFrame} durationInFrames={INTRO_FRAMES}>
       <AbsoluteFill>
         <Background color="#5BC0BE" />
         <IntroScreen title={data.title} questionCount={questions.length} />
@@ -93,25 +84,25 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
       <Audio src={voPath('Welcome to the quiz! Can you score ten out of ten? Lets find out.')} />
     </Sequence>
   );
-  currentFrame += INTRO_DURATION;
+  currentFrame += INTRO_FRAMES;
 
   // GET READY
   sequences.push(
-    <Sequence key="getready" from={currentFrame} durationInFrames={GETREADY_DURATION}>
+    <Sequence key="getready" from={currentFrame} durationInFrames={GETREADY_FRAMES}>
       <AbsoluteFill>
         <Background color="#6B4CE6" />
         <GetReady />
       </AbsoluteFill>
     </Sequence>
   );
-  currentFrame += GETREADY_DURATION;
+  currentFrame += GETREADY_FRAMES;
 
   // QUESTIONS (with transitions before each, and halfway screen)
   questions.forEach((question, idx) => {
     // Halfway screen
     if (idx === halfwayIndex) {
       sequences.push(
-        <Sequence key="halfway" from={currentFrame} durationInFrames={HALFWAY_DURATION}>
+        <Sequence key="halfway" from={currentFrame} durationInFrames={HALFWAY_FRAMES}>
           <AbsoluteFill>
             <Background color="#E85D75" />
             <HalfwayScreen />
@@ -119,7 +110,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
           <Audio src={voPath('Halfway there! How are you doing? Drop your score in the comments!')} />
         </Sequence>
       );
-      currentFrame += HALFWAY_DURATION;
+      currentFrame += HALFWAY_FRAMES;
     }
 
     const bgColor = BG_COLORS[idx % BG_COLORS.length];
@@ -127,7 +118,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
     // TRANSITION — "Question X"
     const transText = `Question ${['one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen','sixteen','seventeen','eighteen','nineteen','twenty'][question.questionNumber - 1] || question.questionNumber}.`;
     sequences.push(
-      <Sequence key={`trans-${question.id}`} from={currentFrame} durationInFrames={TRANSITION_DURATION}>
+      <Sequence key={`trans-${question.id}`} from={currentFrame} durationInFrames={TRANSITION_FRAMES}>
         <AbsoluteFill>
           <Background color={bgColor} />
           <QuestionTransition questionNumber={question.questionNumber} totalQuestions={question.totalQuestions} />
@@ -135,12 +126,12 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         <Audio src={voPath(transText)} volume={1} />
       </Sequence>
     );
-    currentFrame += TRANSITION_DURATION;
+    currentFrame += TRANSITION_FRAMES;
 
     // QUESTION
     const duration = getQuestionDuration(question);
     const voDelay = Math.ceil((question.voDuration || 0) * FPS);
-    const mediaDelay = (question.mediaRole || 'clue') === 'clue' ? Math.min(question.mediaDuration || 0, 20) * FPS : 0;
+    const mediaDelay = (question.mediaRole || 'clue') === 'clue' ? Math.min(question.mediaDuration || 0, MAX_MEDIA_SECONDS) * FPS : 0;
     const revealStartFrame = voDelay + mediaDelay + question.timeLimit * FPS;
 
     sequences.push(
@@ -164,7 +155,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 
   // OUTRO
   sequences.push(
-    <Sequence key="outro" from={currentFrame} durationInFrames={OUTRO_DURATION}>
+    <Sequence key="outro" from={currentFrame} durationInFrames={OUTRO_FRAMES}>
       <AbsoluteFill>
         <Background color="#4CAF50" />
         <OutroScreen totalQuestions={questions.length} />
@@ -179,9 +170,9 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 export function calculateTotalDuration(data: QuizVideoData): number {
   const questions = data.questions;
 
-  let total = INTRO_DURATION + GETREADY_DURATION + OUTRO_DURATION + HALFWAY_DURATION;
+  let total = INTRO_FRAMES + GETREADY_FRAMES + OUTRO_FRAMES + HALFWAY_FRAMES;
   questions.forEach((q) => {
-    total += TRANSITION_DURATION + getQuestionDuration(q);
+    total += TRANSITION_FRAMES + getQuestionDuration(q);
   });
   return total;
 }

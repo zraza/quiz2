@@ -4,7 +4,7 @@ import { voPath } from './vo';
 /** Estimate VO duration from text length (at ~155 wpm = ~2.6 words/sec) */
 function estimateVoDuration(text: string): number {
   const words = text.split(/\s+/).length;
-  return Math.ceil(words / 2.5) + 1; // +1 second buffer
+  return Math.ceil(words / 2.5) + 2; // +2 seconds buffer so VO fully ends before timer
 }
 
 // Auto-add VO URLs based on question text (hashed filenames via staticFile)

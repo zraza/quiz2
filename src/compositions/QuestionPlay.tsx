@@ -25,20 +25,21 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
 
       {/* CONTENT: Image left + Options right */}
       {(() => {
-        // Animate video width: 100% during media → 46% after
-        // Transition happens over 10 frames after media ends
+        // Animate video width: 100% during clue media → 46% after
+        // For ambient: always 46% with options visible
         const transitionFrame = Math.max(0, frame - delayFrames);
-        const videoWidthPct = (isVoPhase || isMediaPhase)
+        const isCluePhase = mediaRole === 'clue' && (isVoPhase || isMediaPhase);
+        const videoWidthPct = isCluePhase
           ? 100
-          : delayFrames > 0
+          : delayFrames > 0 && mediaRole === 'clue'
             ? interpolate(transitionFrame, [0, 10], [100, 46], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             : 46;
-        const optionsOpacity = (isVoPhase || isMediaPhase)
+        const optionsOpacity = isCluePhase
           ? 0
-          : delayFrames > 0
+          : delayFrames > 0 && mediaRole === 'clue'
             ? interpolate(transitionFrame, [3, 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             : 1;
-        const contentGap = (isVoPhase || isMediaPhase) ? 0 : interpolate(Math.min(transitionFrame, 10), [0, 10], [0, 60], { extrapolateRight: 'clamp' });
+        const contentGap = isCluePhase ? 0 : interpolate(Math.min(transitionFrame, 10), [0, 10], [0, 60], { extrapolateRight: 'clamp' });
 
         return (
           <div style={{

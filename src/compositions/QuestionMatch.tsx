@@ -8,7 +8,7 @@ const ROW_COLORS = ['#E53935', '#1E88E5', '#43A047'];
 
 /**
  * QuestionMatch: Two columns, 3 rows. Left fixed, right slides to correct positions.
- * Uses absolute pixel positioning so cards slide precisely without overlap.
+ * Left: images. Right: white cards with text/flags that slide into place.
  */
 export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
   const frame = useCurrentFrame();
@@ -42,8 +42,6 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
   const rowHeight = (contentHeight - ROW_GAP * (rowCount - 1)) / rowCount;
 
   // For each right item at display position dp, find its target row
-  // correctOrder[leftRow] = rightIndex that matches it
-  // So we need: for dp, which left row does right[dp] belong to?
   const targetRowForDisplay: number[] = [];
   for (let dp = 0; dp < rowCount; dp++) {
     const targetRow = question.correctOrder.indexOf(dp);
@@ -77,7 +75,7 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
         top: 210, left: 80, right: 80, bottom: 80,
         display: 'flex', gap: 50,
       }}>
-        {/* LEFT COLUMN — fixed positions */}
+        {/* LEFT COLUMN — images, fixed positions */}
         <div style={{ flex: 1, position: 'relative' }}>
           {question.left.map((item, i) => {
             const delay = spd.entryDelay + i * spd.entryGap;
@@ -133,14 +131,13 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
           })}
         </div>
 
-        {/* RIGHT COLUMN — slides on reveal using absolute positions */}
+        {/* RIGHT COLUMN — white cards, slide on reveal */}
         <div style={{ flex: 1, position: 'relative' }}>
           {question.right.map((item, displayPos) => {
             const delay = spd.entryDelay + (displayPos + rowCount) * spd.entryGap;
             const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
             const entryScale = interpolate(s, [0, 1], [0.85, 1]);
             const entryOpacity = interpolate(s, [0, 1], [0, 1]);
-            const cardSweep = ((frame * 1.2 + (displayPos + 3) * 50) % 220) - 60;
 
             // Slide from current row to target row
             const startY = displayPos * (rowHeight + ROW_GAP);
@@ -160,49 +157,28 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                 <div style={{
                   position: 'absolute', inset: 0,
                   borderRadius: 20, overflow: 'hidden',
+                  background: '#FFFFFF',
                   border: isRevealing && revealProgress > 0.7
-                    ? `3px solid ${matchedColor}`
-                    : `3px solid rgba(255,255,255,${0.4 + glowPulse})`,
+                    ? `4px solid ${matchedColor}`
+                    : '4px solid rgba(0,0,0,0.06)',
                   boxShadow: isRevealing && revealProgress > 0.7
-                    ? `0 6px 24px rgba(0,0,0,0.2), 0 0 15px ${matchedColor}44`
-                    : `0 6px 24px rgba(0,0,0,0.2)`,
-                  background: 'rgba(20,20,40,0.8)',
+                    ? `0 6px 24px rgba(0,0,0,0.1), 0 0 20px ${matchedColor}33`
+                    : '0 6px 24px rgba(0,0,0,0.1)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <div style={{
-                      position: 'absolute', inset: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <OptionText width={600} maxSize={52} minSize={24} color="#fff">
-                        {item.label}
-                      </OptionText>
-                    </div>
+                    <OptionText width={600} maxSize={56} minSize={26} color="#1a1a1a">
+                      {item.label}
+                    </OptionText>
                   )}
-                  {/* Light sweep */}
-                  {!isRevealing && (
-                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(115deg, transparent ${cardSweep - 30}%, rgba(255,255,255,0.2) ${cardSweep}%, rgba(255,255,255,0.3) ${cardSweep + 4}%, transparent ${cardSweep + 30}%)` }} />
-                  )}
-                  {/* Label if has image */}
-                  {item.image && (
-                    <div style={{
-                      position: 'absolute', bottom: 0, left: 0, right: 0,
-                      padding: '30px 16px 16px',
-                      background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    }}>
-                      <OptionText width={500} maxSize={36} minSize={18} color="#fff">{item.label}</OptionText>
-                    </div>
-                  )}
-                  {/* Top shine */}
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${0.3 + glowPulse * 0.3}), transparent)` }} />
                   {/* Color dot on reveal */}
                   {isRevealing && revealProgress > 0.7 && (
                     <div style={{
-                      position: 'absolute', top: 12, right: 12,
-                      width: 14, height: 14, borderRadius: '50%',
-                      background: matchedColor, boxShadow: `0 0 8px ${matchedColor}`,
+                      position: 'absolute', top: 14, right: 14,
+                      width: 16, height: 16, borderRadius: '50%',
+                      background: matchedColor, boxShadow: `0 0 10px ${matchedColor}`,
                       opacity: interpolate(revealProgress, [0.7, 1], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
                     }} />
                   )}

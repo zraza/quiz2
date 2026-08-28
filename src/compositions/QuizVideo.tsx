@@ -7,6 +7,7 @@ import { Background } from '../components/Background';
 import { IntroScreen } from './IntroScreen';
 import { GetReady } from './GetReady';
 import { QuestionTransition } from './QuestionTransition';
+import { BonusRoundScreen } from './BonusRoundScreen';
 import { QuestionPlay } from './QuestionPlay';
 import { QuestionOpen } from './QuestionOpen';
 import { QuestionImage } from './QuestionImage';
@@ -141,8 +142,14 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
     sequences.push(
       <Sequence key={`trans-${question.id}`} from={currentFrame} durationInFrames={TRANSITION_FRAMES}>
         <AbsoluteFill>
-          <Background color={bgColor} />
-          <QuestionTransition questionNumber={question.questionNumber} totalQuestions={question.totalQuestions} />
+          {isBonus ? (
+            <BonusRoundScreen />
+          ) : (
+            <>
+              <Background color={bgColor} />
+              <QuestionTransition questionNumber={question.questionNumber} totalQuestions={question.totalQuestions} />
+            </>
+          )}
         </AbsoluteFill>
         <Audio src={voPath(transText)} volume={1} />
       </Sequence>

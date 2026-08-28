@@ -27,5 +27,5 @@ export function voHash(text: string): string {
 
 /** Get the public VO file path for a given text */
 export function voPath(text: string): string {
-  return `/vo/${voHash(text)}.m4a`;
+  return `/vo/${voHash(text)}.mp3`;
 }

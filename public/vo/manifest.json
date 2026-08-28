@@ -2,421 +2,421 @@
   "intro": {
     "text": "Welcome to the quiz! Can you score ten out of ten? Lets find out.",
     "hash": "230e5557e246",
-    "file": "230e5557e246.m4a",
-    "path": "/vo/230e5557e246.m4a",
-    "duration": 5.46
+    "file": "230e5557e246.mp3",
+    "path": "/vo/230e5557e246.mp3",
+    "duration": 5.54
   },
   "getready": {
     "text": "Get ready!",
     "hash": "4bd009335004",
-    "file": "4bd009335004.m4a",
-    "path": "/vo/4bd009335004.m4a",
-    "duration": 1.04
+    "file": "4bd009335004.mp3",
+    "path": "/vo/4bd009335004.mp3",
+    "duration": 1.1
   },
   "halfway": {
     "text": "Halfway there! How are you doing? Drop your score in the comments!",
     "hash": "1472927f40e2",
-    "file": "1472927f40e2.m4a",
-    "path": "/vo/1472927f40e2.m4a",
-    "duration": 5.02
+    "file": "1472927f40e2.mp3",
+    "path": "/vo/1472927f40e2.mp3",
+    "duration": 5.09
   },
   "outro": {
     "text": "Quiz complete! How did you do? Subscribe for more quizzes every week!",
     "hash": "1a10ee495bbc",
-    "file": "1a10ee495bbc.m4a",
-    "path": "/vo/1a10ee495bbc.m4a",
-    "duration": 5.73
+    "file": "1a10ee495bbc.mp3",
+    "path": "/vo/1a10ee495bbc.mp3",
+    "duration": 5.8
   },
   "trans-1": {
     "text": "Question one.",
     "hash": "18184ab8a62b",
-    "file": "18184ab8a62b.m4a",
-    "path": "/vo/18184ab8a62b.m4a",
-    "duration": 1.39
+    "file": "18184ab8a62b.mp3",
+    "path": "/vo/18184ab8a62b.mp3",
+    "duration": 1.46
   },
   "trans-2": {
     "text": "Question two.",
     "hash": "1729a2727449",
-    "file": "1729a2727449.m4a",
-    "path": "/vo/1729a2727449.m4a",
-    "duration": 1.4
+    "file": "1729a2727449.mp3",
+    "path": "/vo/1729a2727449.mp3",
+    "duration": 1.46
   },
   "trans-3": {
     "text": "Question three.",
     "hash": "2a48122716a2",
-    "file": "2a48122716a2.m4a",
-    "path": "/vo/2a48122716a2.m4a",
-    "duration": 1.53
+    "file": "2a48122716a2.mp3",
+    "path": "/vo/2a48122716a2.mp3",
+    "duration": 1.59
   },
   "trans-4": {
     "text": "Question four.",
     "hash": "fc41853183cb",
-    "file": "fc41853183cb.m4a",
-    "path": "/vo/fc41853183cb.m4a",
-    "duration": 1.47
+    "file": "fc41853183cb.mp3",
+    "path": "/vo/fc41853183cb.mp3",
+    "duration": 1.54
   },
   "trans-5": {
     "text": "Question five.",
     "hash": "19b658e6dd81",
-    "file": "19b658e6dd81.m4a",
-    "path": "/vo/19b658e6dd81.m4a",
-    "duration": 1.46
+    "file": "19b658e6dd81.mp3",
+    "path": "/vo/19b658e6dd81.mp3",
+    "duration": 1.52
   },
   "trans-6": {
     "text": "Question six.",
     "hash": "134ae619fb3e",
-    "file": "134ae619fb3e.m4a",
-    "path": "/vo/134ae619fb3e.m4a",
-    "duration": 1.56
+    "file": "134ae619fb3e.mp3",
+    "path": "/vo/134ae619fb3e.mp3",
+    "duration": 1.62
   },
   "trans-7": {
     "text": "Question seven.",
     "hash": "77c5817139a2",
-    "file": "77c5817139a2.m4a",
-    "path": "/vo/77c5817139a2.m4a",
-    "duration": 1.54
+    "file": "77c5817139a2.mp3",
+    "path": "/vo/77c5817139a2.mp3",
+    "duration": 1.59
   },
   "trans-8": {
     "text": "Question eight.",
     "hash": "18cc5c508c34",
-    "file": "18cc5c508c34.m4a",
-    "path": "/vo/18cc5c508c34.m4a",
-    "duration": 1.21
+    "file": "18cc5c508c34.mp3",
+    "path": "/vo/18cc5c508c34.mp3",
+    "duration": 1.28
   },
   "trans-9": {
     "text": "Question nine.",
     "hash": "1e7c2944f575",
-    "file": "1e7c2944f575.m4a",
-    "path": "/vo/1e7c2944f575.m4a",
-    "duration": 1.47
+    "file": "1e7c2944f575.mp3",
+    "path": "/vo/1e7c2944f575.mp3",
+    "duration": 1.54
   },
   "trans-10": {
     "text": "Question ten.",
     "hash": "978ea0b9b83c",
-    "file": "978ea0b9b83c.m4a",
-    "path": "/vo/978ea0b9b83c.m4a",
-    "duration": 1.41
+    "file": "978ea0b9b83c.mp3",
+    "path": "/vo/978ea0b9b83c.mp3",
+    "duration": 1.46
   },
   "trans-11": {
     "text": "Question eleven.",
     "hash": "12543595407d",
-    "file": "12543595407d.m4a",
-    "path": "/vo/12543595407d.m4a",
-    "duration": 1.48
+    "file": "12543595407d.mp3",
+    "path": "/vo/12543595407d.mp3",
+    "duration": 1.54
   },
   "trans-12": {
     "text": "Question twelve.",
     "hash": "cfa98e80e825",
-    "file": "cfa98e80e825.m4a",
-    "path": "/vo/cfa98e80e825.m4a",
-    "duration": 1.48
+    "file": "cfa98e80e825.mp3",
+    "path": "/vo/cfa98e80e825.mp3",
+    "duration": 1.54
   },
   "trans-13": {
     "text": "Question thirteen.",
     "hash": "53b792627f79",
-    "file": "53b792627f79.m4a",
-    "path": "/vo/53b792627f79.m4a",
-    "duration": 1.68
+    "file": "53b792627f79.mp3",
+    "path": "/vo/53b792627f79.mp3",
+    "duration": 1.75
   },
   "trans-14": {
     "text": "Question fourteen.",
     "hash": "144e847e1294",
-    "file": "144e847e1294.m4a",
-    "path": "/vo/144e847e1294.m4a",
-    "duration": 1.66
+    "file": "144e847e1294.mp3",
+    "path": "/vo/144e847e1294.mp3",
+    "duration": 1.72
   },
   "trans-15": {
     "text": "Question fifteen.",
     "hash": "107e43ab7cb4",
-    "file": "107e43ab7cb4.m4a",
-    "path": "/vo/107e43ab7cb4.m4a",
-    "duration": 1.79
+    "file": "107e43ab7cb4.mp3",
+    "path": "/vo/107e43ab7cb4.mp3",
+    "duration": 1.85
   },
   "trans-16": {
     "text": "Question sixteen.",
     "hash": "1a660edb28fa",
-    "file": "1a660edb28fa.m4a",
-    "path": "/vo/1a660edb28fa.m4a",
-    "duration": 1.83
+    "file": "1a660edb28fa.mp3",
+    "path": "/vo/1a660edb28fa.mp3",
+    "duration": 1.91
   },
   "trans-17": {
     "text": "Question seventeen.",
     "hash": "1a25ff68be24",
-    "file": "1a25ff68be24.m4a",
-    "path": "/vo/1a25ff68be24.m4a",
-    "duration": 1.85
+    "file": "1a25ff68be24.mp3",
+    "path": "/vo/1a25ff68be24.mp3",
+    "duration": 1.91
   },
   "trans-18": {
     "text": "Question eighteen.",
     "hash": "36f0952f4ddd",
-    "file": "36f0952f4ddd.m4a",
-    "path": "/vo/36f0952f4ddd.m4a",
-    "duration": 1.55
+    "file": "36f0952f4ddd.mp3",
+    "path": "/vo/36f0952f4ddd.mp3",
+    "duration": 1.62
   },
   "trans-19": {
     "text": "Question nineteen.",
     "hash": "1c4eb5e3cd0a",
-    "file": "1c4eb5e3cd0a.m4a",
-    "path": "/vo/1c4eb5e3cd0a.m4a",
-    "duration": 1.73
+    "file": "1c4eb5e3cd0a.mp3",
+    "path": "/vo/1c4eb5e3cd0a.mp3",
+    "duration": 1.8
   },
   "trans-20": {
     "text": "Question twenty.",
     "hash": "3e7774116a58",
-    "file": "3e7774116a58.m4a",
-    "path": "/vo/3e7774116a58.m4a",
-    "duration": 1.57
+    "file": "3e7774116a58.mp3",
+    "path": "/vo/3e7774116a58.mp3",
+    "duration": 1.65
   },
   "q1": {
     "text": "What is the capital of Australia?",
     "hash": "92b91b480a1c",
-    "file": "92b91b480a1c.m4a",
-    "path": "/vo/92b91b480a1c.m4a",
-    "duration": 2.5
+    "file": "92b91b480a1c.mp3",
+    "path": "/vo/92b91b480a1c.mp3",
+    "duration": 2.56
   },
   "q2": {
     "text": "Which country does this flag belong to?",
     "hash": "13838bf0be7f",
-    "file": "13838bf0be7f.m4a",
-    "path": "/vo/13838bf0be7f.m4a",
-    "duration": 3
+    "file": "13838bf0be7f.mp3",
+    "path": "/vo/13838bf0be7f.mp3",
+    "duration": 3.06
   },
   "q3": {
     "text": "In which year did the Berlin Wall fall, reuniting East and West Germany?",
     "hash": "106d5addf264",
-    "file": "106d5addf264.m4a",
-    "path": "/vo/106d5addf264.m4a",
-    "duration": 5.19
+    "file": "106d5addf264.mp3",
+    "path": "/vo/106d5addf264.mp3",
+    "duration": 5.25
   },
   "q4": {
     "text": "Which movie is this scene from?",
     "hash": "1553b245b8e1",
-    "file": "1553b245b8e1.m4a",
-    "path": "/vo/1553b245b8e1.m4a",
-    "duration": 2.37
+    "file": "1553b245b8e1.mp3",
+    "path": "/vo/1553b245b8e1.mp3",
+    "duration": 2.43
   },
   "q5": {
     "text": "What is the longest river in the world?",
     "hash": "fd48154cd373",
-    "file": "fd48154cd373.m4a",
-    "path": "/vo/fd48154cd373.m4a",
-    "duration": 2.67
+    "file": "fd48154cd373.mp3",
+    "path": "/vo/fd48154cd373.mp3",
+    "duration": 2.74
   },
   "q5b": {
     "text": "In which year was John Travolta born?",
     "hash": "1ae9fd14c594",
-    "file": "1ae9fd14c594.m4a",
-    "path": "/vo/1ae9fd14c594.m4a",
-    "duration": 2.8
+    "file": "1ae9fd14c594.mp3",
+    "path": "/vo/1ae9fd14c594.mp3",
+    "duration": 2.87
   },
   "q6": {
     "text": "Name this famous landmark.",
     "hash": "1ead459db450",
-    "file": "1ead459db450.m4a",
-    "path": "/vo/1ead459db450.m4a",
-    "duration": 2.29
+    "file": "1ead459db450.mp3",
+    "path": "/vo/1ead459db450.mp3",
+    "duration": 2.35
   },
   "q7": {
     "text": "Which English footballer scored a hat-trick in the 1966 World Cup Final against West Germany?",
     "hash": "1fa5521c06b2",
-    "file": "1fa5521c06b2.m4a",
-    "path": "/vo/1fa5521c06b2.m4a",
-    "duration": 7.34
+    "file": "1fa5521c06b2.mp3",
+    "path": "/vo/1fa5521c06b2.mp3",
+    "duration": 7.39
   },
   "q8": {
     "text": "When did the London Underground first open?",
     "hash": "15343d823d12",
-    "file": "15343d823d12.m4a",
-    "path": "/vo/15343d823d12.m4a",
-    "duration": 2.97
+    "file": "15343d823d12.mp3",
+    "path": "/vo/15343d823d12.mp3",
+    "duration": 3.03
   },
   "q9": {
     "text": "Which animal is this?",
     "hash": "1a428b4f1dde",
-    "file": "1a428b4f1dde.m4a",
-    "path": "/vo/1a428b4f1dde.m4a",
-    "duration": 1.69
+    "file": "1a428b4f1dde.mp3",
+    "path": "/vo/1a428b4f1dde.mp3",
+    "duration": 1.75
   },
   "q10": {
     "text": "What was the name of the ship that Charles Darwin sailed on during his famous voyage to the Galapagos Islands?",
     "hash": "1907bf240433",
-    "file": "1907bf240433.m4a",
-    "path": "/vo/1907bf240433.m4a",
-    "duration": 7.27
+    "file": "1907bf240433.mp3",
+    "path": "/vo/1907bf240433.mp3",
+    "duration": 7.34
   },
   "q11": {
     "text": "Name the artist who performed this famous song.",
     "hash": "119452f9d6f2",
-    "file": "119452f9d6f2.m4a",
-    "path": "/vo/119452f9d6f2.m4a",
-    "duration": 3.36
+    "file": "119452f9d6f2.mp3",
+    "path": "/vo/119452f9d6f2.mp3",
+    "duration": 3.42
   },
   "q12": {
     "text": "Which painting is by Vincent van Gogh?",
     "hash": "18ef5c984825",
-    "file": "18ef5c984825.m4a",
-    "path": "/vo/18ef5c984825.m4a",
-    "duration": 2.87
+    "file": "18ef5c984825.mp3",
+    "path": "/vo/18ef5c984825.mp3",
+    "duration": 2.93
   },
   "q13": {
     "text": "Which country has a larger population?",
     "hash": "1b2fa61b28c2",
-    "file": "1b2fa61b28c2.m4a",
-    "path": "/vo/1b2fa61b28c2.m4a",
-    "duration": 2.97
+    "file": "1b2fa61b28c2.mp3",
+    "path": "/vo/1b2fa61b28c2.mp3",
+    "duration": 3.03
   },
   "q14": {
     "text": "Which building is taller?",
     "hash": "bc41fa63f261",
-    "file": "bc41fa63f261.m4a",
-    "path": "/vo/bc41fa63f261.m4a",
-    "duration": 1.79
+    "file": "bc41fa63f261.mp3",
+    "path": "/vo/bc41fa63f261.mp3",
+    "duration": 1.85
   },
   "q15": {
     "text": "Arrange these events from earliest to latest.",
     "hash": "286b67a35766",
-    "file": "286b67a35766.m4a",
-    "path": "/vo/286b67a35766.m4a",
-    "duration": 3.2
+    "file": "286b67a35766.mp3",
+    "path": "/vo/286b67a35766.mp3",
+    "duration": 3.27
   },
   "q16": {
     "text": "Match the landmark to its country.",
     "hash": "15a8f9c96617",
-    "file": "15a8f9c96617.m4a",
-    "path": "/vo/15a8f9c96617.m4a",
-    "duration": 2.56
+    "file": "15a8f9c96617.mp3",
+    "path": "/vo/15a8f9c96617.mp3",
+    "duration": 2.64
   },
   "q1-reveal": {
     "text": "The answer is Canberra.",
     "hash": "bbc711c5785a",
-    "file": "bbc711c5785a.m4a",
-    "path": "/vo/bbc711c5785a.m4a",
-    "duration": 1.85
+    "file": "bbc711c5785a.mp3",
+    "path": "/vo/bbc711c5785a.mp3",
+    "duration": 1.91
   },
   "q2-reveal": {
     "text": "The answer is Brazil.",
     "hash": "42ef605a99b5",
-    "file": "42ef605a99b5.m4a",
-    "path": "/vo/42ef605a99b5.m4a",
-    "duration": 1.85
+    "file": "42ef605a99b5.mp3",
+    "path": "/vo/42ef605a99b5.mp3",
+    "duration": 1.91
   },
   "q3-reveal": {
     "text": "The answer is 1989.",
     "hash": "1dd41c04043f",
-    "file": "1dd41c04043f.m4a",
-    "path": "/vo/1dd41c04043f.m4a",
-    "duration": 2.63
+    "file": "1dd41c04043f.mp3",
+    "path": "/vo/1dd41c04043f.mp3",
+    "duration": 2.69
   },
   "q4-reveal": {
     "text": "The answer is The Godfather.",
     "hash": "1254609ed61c",
-    "file": "1254609ed61c.m4a",
-    "path": "/vo/1254609ed61c.m4a",
-    "duration": 2.09
+    "file": "1254609ed61c.mp3",
+    "path": "/vo/1254609ed61c.mp3",
+    "duration": 2.17
   },
   "q5-reveal": {
     "text": "The answer is The Nile.",
     "hash": "16839a5ce45b",
-    "file": "16839a5ce45b.m4a",
-    "path": "/vo/16839a5ce45b.m4a",
-    "duration": 1.85
+    "file": "16839a5ce45b.mp3",
+    "path": "/vo/16839a5ce45b.mp3",
+    "duration": 1.91
   },
   "q5b-reveal": {
     "text": "The answer is 1954.",
     "hash": "62a0dfb4b5ef",
-    "file": "62a0dfb4b5ef.m4a",
-    "path": "/vo/62a0dfb4b5ef.m4a",
-    "duration": 2.81
+    "file": "62a0dfb4b5ef.mp3",
+    "path": "/vo/62a0dfb4b5ef.mp3",
+    "duration": 2.87
   },
   "q6-reveal": {
     "text": "The answer is Machu Picchu.",
     "hash": "f3905c3d4087",
-    "file": "f3905c3d4087.m4a",
-    "path": "/vo/f3905c3d4087.m4a",
-    "duration": 2.15
+    "file": "f3905c3d4087.mp3",
+    "path": "/vo/f3905c3d4087.mp3",
+    "duration": 2.3
   },
   "q7-reveal": {
     "text": "The answer is Geoff Hurst.",
     "hash": "87ab390673c4",
-    "file": "87ab390673c4.m4a",
-    "path": "/vo/87ab390673c4.m4a",
-    "duration": 2.19
+    "file": "87ab390673c4.mp3",
+    "path": "/vo/87ab390673c4.mp3",
+    "duration": 2.27
   },
   "q8-reveal": {
     "text": "The answer is 1863.",
     "hash": "1a0ae27bf37a",
-    "file": "1a0ae27bf37a.m4a",
-    "path": "/vo/1a0ae27bf37a.m4a",
-    "duration": 3.92
+    "file": "1a0ae27bf37a.mp3",
+    "path": "/vo/1a0ae27bf37a.mp3",
+    "duration": 4
   },
   "q9-reveal": {
     "text": "The answer is Pangolin.",
     "hash": "1b877e63d279",
-    "file": "1b877e63d279.m4a",
-    "path": "/vo/1b877e63d279.m4a",
-    "duration": 1.96
+    "file": "1b877e63d279.mp3",
+    "path": "/vo/1b877e63d279.mp3",
+    "duration": 2.01
   },
   "q10-reveal": {
     "text": "The answer is HMS Beagle.",
     "hash": "1ecfa3352704",
-    "file": "1ecfa3352704.m4a",
-    "path": "/vo/1ecfa3352704.m4a",
-    "duration": 2.39
+    "file": "1ecfa3352704.mp3",
+    "path": "/vo/1ecfa3352704.mp3",
+    "duration": 2.46
   },
   "q11-reveal": {
     "text": "The answer is Queen.",
     "hash": "1f052438bf07",
-    "file": "1f052438bf07.m4a",
-    "path": "/vo/1f052438bf07.m4a",
-    "duration": 1.75
+    "file": "1f052438bf07.mp3",
+    "path": "/vo/1f052438bf07.mp3",
+    "duration": 1.8
   },
   "q12-reveal": {
     "text": "The answer is Starry Night.",
     "hash": "ad017d6a1aa4",
-    "file": "ad017d6a1aa4.m4a",
-    "path": "/vo/ad017d6a1aa4.m4a",
-    "duration": 2.13
+    "file": "ad017d6a1aa4.mp3",
+    "path": "/vo/ad017d6a1aa4.mp3",
+    "duration": 2.19
   },
   "q13-reveal": {
     "text": "The answer is Turkey.",
     "hash": "5c0e3acc511c",
-    "file": "5c0e3acc511c.m4a",
-    "path": "/vo/5c0e3acc511c.m4a",
-    "duration": 1.81
+    "file": "5c0e3acc511c.mp3",
+    "path": "/vo/5c0e3acc511c.mp3",
+    "duration": 1.88
   },
   "q14-reveal": {
     "text": "The answer is the Eiffel Tower.",
     "hash": "7d91aa4cb755",
-    "file": "7d91aa4cb755.m4a",
-    "path": "/vo/7d91aa4cb755.m4a",
-    "duration": 2.21
+    "file": "7d91aa4cb755.mp3",
+    "path": "/vo/7d91aa4cb755.mp3",
+    "duration": 2.27
   },
   "q15-reveal": {
     "text": "The correct order is Moon Landing, Berlin Wall, World Wide Web.",
     "hash": "5dc526556b2b",
-    "file": "5dc526556b2b.m4a",
-    "path": "/vo/5dc526556b2b.m4a",
-    "duration": 4.91
+    "file": "5dc526556b2b.mp3",
+    "path": "/vo/5dc526556b2b.mp3",
+    "duration": 4.99
   },
   "q16-reveal": {
     "text": "Eiffel Tower is France, Colosseum is Italy, Big Ben is United Kingdom.",
     "hash": "3ab0667cc7d7",
-    "file": "3ab0667cc7d7.m4a",
-    "path": "/vo/3ab0667cc7d7.m4a",
-    "duration": 6.32
+    "file": "3ab0667cc7d7.mp3",
+    "path": "/vo/3ab0667cc7d7.mp3",
+    "duration": 6.37
   },
   "times-up": {
     "text": "Time's up!",
     "hash": "1b85d504c1d1",
-    "file": "1b85d504c1d1.m4a",
-    "path": "/vo/1b85d504c1d1.m4a",
-    "duration": 1.12
+    "file": "1b85d504c1d1.mp3",
+    "path": "/vo/1b85d504c1d1.mp3",
+    "duration": 1.18
   },
   "hurry": {
     "text": "Hurry!",
     "hash": "146da58fb58c",
-    "file": "146da58fb58c.m4a",
-    "path": "/vo/146da58fb58c.m4a",
-    "duration": 0.75
+    "file": "146da58fb58c.mp3",
+    "path": "/vo/146da58fb58c.mp3",
+    "duration": 0.81
   }
 }

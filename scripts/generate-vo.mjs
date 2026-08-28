@@ -50,7 +50,11 @@ export function voPath(text) {
 // ============ TTS FUNCTION (swap this for ElevenLabs later) ============
 function generateAudio(text, outFile) {
   const escaped = text.replace(/"/g, '\\"').replace(/'/g, "'\\''");
-  execSync(`say -v ${VOICE} -r ${RATE} --file-format=mp4f -o "${outFile}" "${escaped}"`);
+  // Generate as AIFF first (say's native format), then convert to mp3
+  const tmpFile = outFile.replace('.mp3', '.aiff');
+  execSync(`say -v ${VOICE} -r ${RATE} -o "${tmpFile}" "${escaped}"`);
+  execSync(`ffmpeg -y -i "${tmpFile}" -codec:a libmp3lame -b:a 128k "${outFile}" 2>/dev/null`);
+  execSync(`rm "${tmpFile}"`);
 }
 
 // ============ ALL VO TEXTS ============
@@ -147,7 +151,7 @@ console.log(`Output: ${OUT_DIR}\n`);
 
 for (const { key, text } of allTexts) {
   const hash = voHash(text);
-  const filename = `${hash}.m4a`;
+  const filename = `${hash}.mp3`;
   const outFile = path.join(OUT_DIR, filename);
 
   if (existsSync(outFile)) {
@@ -159,9 +163,8 @@ for (const { key, text } of allTexts) {
   try {
     generateAudio(text, outFile);
     // Get duration
-    const info = execSync(`afinfo "${outFile}" 2>&1`).toString();
-    const durationMatch = info.match(/estimated duration: ([\d.]+)/);
-    const duration = durationMatch ? parseFloat(durationMatch[1]).toFixed(2) : '?';
+    const info = execSync(`ffprobe -v error -show_entries format=duration -of csv=p=0 "${outFile}" 2>&1`).toString().trim();
+    const duration = parseFloat(info).toFixed(2);
     
     manifest[key] = { text, hash, file: filename, path: `/vo/${filename}`, duration: parseFloat(duration) };
     console.log(`  ✓ ${key} → ${filename} (${duration}s)`);

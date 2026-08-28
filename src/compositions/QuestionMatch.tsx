@@ -198,15 +198,12 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                 <div style={{
                   position: 'absolute', inset: 0,
                   borderRadius: 20, overflow: 'hidden',
-                  background: bgColor,
-                  border: matched
-                    ? `4px solid ${matchedColor}`
-                    : '4px solid rgba(0,0,0,0.06)',
+                  background: '#FFFFFF',
+                  border: 'none',
                   boxShadow: matched
-                    ? `0 6px 24px rgba(0,0,0,0.1), 0 0 20px ${matchedColor}33`
-                    : '0 6px 24px rgba(0,0,0,0.1)',
+                    ? `0 0 30px ${matchedColor}55, 0 0 60px ${matchedColor}22, 0 4px 16px rgba(0,0,0,0.08)`
+                    : '0 4px 20px rgba(0,0,0,0.1)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'background 0.3s',
                 }}>
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />

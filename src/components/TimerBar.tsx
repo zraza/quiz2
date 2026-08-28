@@ -1,22 +1,17 @@
 import React from 'react';
-import { useCurrentFrame, useVideoConfig, interpolate, spring } from 'remotion';
+import { useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { TIMER_HEIGHT } from '../config';
 
 interface Props {
-  /** 0-1, where 1 = full time remaining */
   progress: number;
-  /** Frame at which the timer first appears (for entry animation) */
   entryFrame: number;
-  /** Whether to show the timer at all */
   visible: boolean;
 }
 
 /**
- * TimerBar: Thick progress bar with dramatic entry.
- * 
- * Entry: bar slides up from below the screen + the fill sweeps from left to right.
- * During countdown: smooth color transition + shimmer.
- * Urgent: bar grows taller and pulses.
+ * TimerBar: Chunky, glossy, beveled progress bar.
+ * Entry: entire bar scales up from bottom with the fill sweeping in.
+ * Premium YouTube quiz style — 3D look with highlights and shadow.
  */
 export const TimerBar: React.FC<Props> = ({ progress, entryFrame, visible }) => {
   const frame = useCurrentFrame();
@@ -24,38 +19,28 @@ export const TimerBar: React.FC<Props> = ({ progress, entryFrame, visible }) => 
 
   if (!visible) return null;
 
-  const framesSinceEntry = Math.max(0, frame - entryFrame);
+  const sinceEntry = Math.max(0, frame - entryFrame);
 
-  // Slide up from below — translateY goes from 100% (hidden below) to 0
-  const slideUp = interpolate(framesSinceEntry, [0, 12], [TIMER_HEIGHT + 10, 0], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  // Entry: scale Y from 0 → 1 (bar "pops up" from nothing)
+  const scaleY = interpolate(sinceEntry, [0, 10], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' });
 
-  // Fill sweeps in from left (slight delay after bar appears)
-  const fillWidth = interpolate(framesSinceEntry, [4, 18], [0, progress * 100], {
-    extrapolateLeft: 'clamp',
-    extrapolateRight: 'clamp',
-  });
+  // Fill sweeps in (slight delay)
+  const fillPct = sinceEntry < 20
+    ? interpolate(sinceEntry, [6, 20], [0, progress * 100], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    : progress * 100;
 
-  // After entry animation completes, use actual progress
-  const displayWidth = framesSinceEntry > 18 ? progress * 100 : fillWidth;
+  // Urgent pulse
+  const urgent = progress < 0.2 && progress > 0 && sinceEntry > 20;
+  const pulse = urgent ? Math.sin(frame * 0.4) * 4 : 0;
+  const height = TIMER_HEIGHT + pulse;
 
-  // Pulse when urgent (below 20%)
-  const urgent = progress < 0.2 && progress > 0 && framesSinceEntry > 18;
-  const pulseExtra = urgent ? Math.sin(frame * 0.5) * 6 : 0;
-  const height = TIMER_HEIGHT + pulseExtra;
-
-  // Color
-  const barColor = progress > 0.5 ? '#4CAF50' : progress > 0.2 ? '#FF9800' : '#F44336';
+  // Color with gradient for 3D depth
+  const baseColor = progress > 0.5 ? '#4CAF50' : progress > 0.2 ? '#FF9800' : '#F44336';
+  const lightColor = progress > 0.5 ? '#81C784' : progress > 0.2 ? '#FFB74D' : '#EF5350';
+  const darkColor = progress > 0.5 ? '#2E7D32' : progress > 0.2 ? '#E65100' : '#B71C1C';
 
   // Shimmer
-  const shimmerPos = ((frame % 40) / 40) * 100;
-
-  // Glow when urgent
-  const glowShadow = urgent
-    ? `0 -4px 16px ${barColor}55, 0 0 8px ${barColor}33`
-    : '0 -2px 8px rgba(0,0,0,0.1)';
+  const shimmer = ((frame % 50) / 50) * 100;
 
   return (
     <div style={{
@@ -64,37 +49,55 @@ export const TimerBar: React.FC<Props> = ({ progress, entryFrame, visible }) => 
       left: 0,
       right: 0,
       height,
-      background: 'rgba(0,0,0,0.15)',
-      transform: `translateY(${slideUp}px)`,
-      boxShadow: glowShadow,
+      transform: `scaleY(${scaleY})`,
+      transformOrigin: 'bottom',
+      // Background track — dark, recessed look
+      background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 40%, rgba(0,0,0,0.25) 100%)',
+      boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3), 0 -2px 8px rgba(0,0,0,0.1)',
     }}>
-      {/* Fill bar */}
+      {/* Fill bar — glossy bevel */}
       <div style={{
         position: 'absolute',
-        top: 0,
-        left: 0,
-        bottom: 0,
-        width: `${displayWidth}%`,
-        background: barColor,
-        borderRadius: '0 4px 4px 0',
+        top: 2,
+        left: 2,
+        bottom: 2,
+        width: `calc(${fillPct}% - 4px)`,
+        borderRadius: 4,
+        // 3D gradient: light on top, dark on bottom
+        background: `linear-gradient(180deg, ${lightColor} 0%, ${baseColor} 35%, ${baseColor} 65%, ${darkColor} 100%)`,
+        boxShadow: `0 1px 3px ${darkColor}88, inset 0 1px 2px rgba(255,255,255,0.3)`,
       }}>
-        {/* Shimmer */}
+        {/* Top highlight — glass reflection */}
+        <div style={{
+          position: 'absolute',
+          top: 2,
+          left: 4,
+          right: 4,
+          height: '35%',
+          borderRadius: 3,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.05) 100%)',
+        }} />
+        {/* Shimmer sweep */}
         <div style={{
           position: 'absolute',
           inset: 0,
-          background: `linear-gradient(90deg, transparent ${shimmerPos - 12}%, rgba(255,255,255,0.35) ${shimmerPos}%, transparent ${shimmerPos + 12}%)`,
-        }} />
-        {/* Top highlight edge */}
-        <div style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 3,
-          background: 'rgba(255,255,255,0.25)',
-          borderRadius: '4px 4px 0 0',
+          borderRadius: 4,
+          background: `linear-gradient(90deg, transparent ${shimmer - 10}%, rgba(255,255,255,0.2) ${shimmer}%, transparent ${shimmer + 10}%)`,
         }} />
       </div>
+
+      {/* Right edge glow on the fill (makes the leading edge pop) */}
+      {fillPct > 5 && (
+        <div style={{
+          position: 'absolute',
+          top: 4,
+          bottom: 4,
+          left: `calc(${fillPct}% - 8px)`,
+          width: 6,
+          borderRadius: 3,
+          background: `rgba(255,255,255,${0.15 + (urgent ? Math.sin(frame * 0.5) * 0.1 : 0)})`,
+        }} />
+      )}
     </div>
   );
 };

@@ -183,8 +183,7 @@
     "text": "Name this famous landmark",
     "hash": "1778a18dcf35",
     "file": "1778a18dcf35.mp3",
-    "path": "/vo/1778a18dcf35.mp3",
-    "duration": 2.35
+    "path": "/vo/1778a18dcf35.mp3"
   },
   "q7": {
     "text": "Which English footballer scored a hat-trick in the 1966 World Cup Final against West Germany?",
@@ -214,8 +213,7 @@
     "text": "Name the artist who performed this famous song",
     "hash": "16d72d27f7fc",
     "file": "16d72d27f7fc.mp3",
-    "path": "/vo/16d72d27f7fc.mp3",
-    "duration": 3.42
+    "path": "/vo/16d72d27f7fc.mp3"
   },
   "q12": {
     "text": "Which painting is by Vincent van Gogh?",
@@ -239,15 +237,13 @@
     "text": "Arrange these events from earliest to latest",
     "hash": "1b0ce2689358",
     "file": "1b0ce2689358.mp3",
-    "path": "/vo/1b0ce2689358.mp3",
-    "duration": 3.19
+    "path": "/vo/1b0ce2689358.mp3"
   },
   "q16": {
     "text": "Match the landmark to its country",
     "hash": "12a762405792",
     "file": "12a762405792.mp3",
-    "path": "/vo/12a762405792.mp3",
-    "duration": 2.64
+    "path": "/vo/12a762405792.mp3"
   },
   "q1-reveal": {
     "text": "The answer is Canberra.",
@@ -337,22 +333,19 @@
     "text": "The answer is Eiffel Tower.",
     "hash": "1aae2d278fc0",
     "file": "1aae2d278fc0.mp3",
-    "path": "/vo/1aae2d278fc0.mp3",
-    "duration": 2.09
+    "path": "/vo/1aae2d278fc0.mp3"
   },
   "q15-reveal": {
     "text": "The answer is Moon Landing, Berlin Wall, World Wide Web.",
     "hash": "1a6fffda197b",
     "file": "1a6fffda197b.mp3",
-    "path": "/vo/1a6fffda197b.mp3",
-    "duration": 4.7
+    "path": "/vo/1a6fffda197b.mp3"
   },
   "q16-reveal": {
     "text": "The answer is Eiffel Tower→France, Colosseum→Italy, Big Ben→UK.",
     "hash": "176f394f1586",
     "file": "176f394f1586.mp3",
-    "path": "/vo/176f394f1586.mp3",
-    "duration": 6.14
+    "path": "/vo/176f394f1586.mp3"
   },
   "times-up": {
     "text": "Time's up!",
@@ -365,5 +358,103 @@
     "hash": "146da58fb58c",
     "file": "146da58fb58c.mp3",
     "path": "/vo/146da58fb58c.mp3"
+  },
+  "q17": {
+    "text": "What famous landmark is this?",
+    "hash": "104ba9216860",
+    "file": "104ba9216860.mp3",
+    "path": "/vo/104ba9216860.mp3",
+    "duration": 2.53
+  },
+  "q17-reveal": {
+    "text": "The answer is Colosseum.",
+    "hash": "28065c80c23b",
+    "file": "28065c80c23b.mp3",
+    "path": "/vo/28065c80c23b.mp3",
+    "duration": 2.17
+  },
+  "q18": {
+    "text": "Which animal is hidden in this image?",
+    "hash": "1e0830226074",
+    "file": "1e0830226074.mp3",
+    "path": "/vo/1e0830226074.mp3",
+    "duration": 2.51
+  },
+  "q18-reveal": {
+    "text": "The answer is Elephant.",
+    "hash": "11f0b9a0e201",
+    "file": "11f0b9a0e201.mp3",
+    "path": "/vo/11f0b9a0e201.mp3",
+    "duration": 1.91
+  },
+  "q19": {
+    "text": "True or false? The Great Wall of China is visible from space with the naked eye.",
+    "hash": "1499014ace2b",
+    "file": "1499014ace2b.mp3",
+    "path": "/vo/1499014ace2b.mp3",
+    "duration": 5.62
+  },
+  "q19-reveal": {
+    "text": "The answer is false.",
+    "hash": "1264f74a18ee",
+    "file": "1264f74a18ee.mp3",
+    "path": "/vo/1264f74a18ee.mp3",
+    "duration": 2.04
+  },
+  "q20": {
+    "text": "Which one does NOT belong?",
+    "hash": "1d3e9f70b107",
+    "file": "1d3e9f70b107.mp3",
+    "path": "/vo/1d3e9f70b107.mp3",
+    "duration": 2.17
+  },
+  "q20-reveal": {
+    "text": "The answer is Mercury.",
+    "hash": "876644331a51",
+    "file": "876644331a51.mp3",
+    "path": "/vo/876644331a51.mp3",
+    "duration": 1.96
+  },
+  "q21": {
+    "text": "Finish the lyric!",
+    "hash": "fcf2c1a6825e",
+    "file": "fcf2c1a6825e.mp3",
+    "path": "/vo/fcf2c1a6825e.mp3",
+    "duration": 1.44
+  },
+  "q21-reveal": {
+    "text": "The answer is Galileo.",
+    "hash": "141b968f8268",
+    "file": "141b968f8268.mp3",
+    "path": "/vo/141b968f8268.mp3",
+    "duration": 2.04
+  },
+  "q22": {
+    "text": "What connects these four things?",
+    "hash": "a2a803f6b676",
+    "file": "a2a803f6b676.mp3",
+    "path": "/vo/a2a803f6b676.mp3",
+    "duration": 2.4
+  },
+  "q22-reveal": {
+    "text": "The answer is They are all types of bridge.",
+    "hash": "1d609f446c5d",
+    "file": "1d609f446c5d.mp3",
+    "path": "/vo/1d609f446c5d.mp3",
+    "duration": 3.06
+  },
+  "trans-21": {
+    "text": "Question twenty one.",
+    "hash": "6974459ac5b8",
+    "file": "6974459ac5b8.mp3",
+    "path": "/vo/6974459ac5b8.mp3",
+    "duration": 1.91
+  },
+  "trans-22": {
+    "text": "Question twenty two.",
+    "hash": "46423e912c03",
+    "file": "46423e912c03.mp3",
+    "path": "/vo/46423e912c03.mp3",
+    "duration": 1.93
   }
 }

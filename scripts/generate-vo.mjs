@@ -127,6 +127,22 @@ function getAllVoTexts() {
     { key: 'q15-reveal', text: 'The answer is Moon Landing, Berlin Wall, World Wide Web.' },
     { key: 'q16-reveal', text: 'The answer is Eiffel Tower→France, Colosseum→Italy, Big Ben→UK.' },
 
+    // === NEW TYPES ===
+    { key: 'q17', text: 'What famous landmark is this?' },
+    { key: 'q17-reveal', text: 'The answer is Colosseum.' },
+    { key: 'q18', text: 'Which animal is hidden in this image?' },
+    { key: 'q18-reveal', text: 'The answer is Elephant.' },
+    { key: 'q19', text: 'True or false? The Great Wall of China is visible from space with the naked eye.' },
+    { key: 'q19-reveal', text: 'The answer is false.' },
+    { key: 'q20', text: 'Which one does NOT belong?' },
+    { key: 'q20-reveal', text: 'The answer is Mercury.' },
+    { key: 'q21', text: 'Finish the lyric!' },
+    { key: 'q21-reveal', text: 'The answer is Galileo.' },
+    { key: 'q22', text: 'What connects these four things?' },
+    { key: 'q22-reveal', text: 'The answer is They are all types of bridge.' },
+    { key: 'trans-21', text: 'Question twenty one.' },
+    { key: 'trans-22', text: 'Question twenty two.' },
+
     // === TIMER WARNINGS ===
     { key: 'times-up', text: "Time's up!" },
     { key: 'hurry', text: 'Hurry!' },

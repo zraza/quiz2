@@ -15,6 +15,12 @@ import { QuestionImageOptions } from './QuestionImageOptions';
 import { QuestionThisOrThat } from './QuestionThisOrThat';
 import { QuestionOrder } from './QuestionOrder';
 import { QuestionMatch } from './QuestionMatch';
+import { QuestionZoomIn } from './QuestionZoomIn';
+import { QuestionBlurReveal } from './QuestionBlurReveal';
+import { QuestionTrueOrFalse } from './QuestionTrueOrFalse';
+import { QuestionOddOneOut } from './QuestionOddOneOut';
+import { QuestionFinishTheLyric } from './QuestionFinishTheLyric';
+import { QuestionConnection } from './QuestionConnection';
 import { HalfwayScreen } from './HalfwayScreen';
 import { OutroScreen } from './OutroScreen';
 
@@ -58,6 +64,18 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
       return <QuestionOrder question={question} />;
     case 'match':
       return <QuestionMatch question={question} />;
+    case 'zoom-in':
+      return <QuestionZoomIn question={question} />;
+    case 'blur-reveal':
+      return <QuestionBlurReveal question={question} />;
+    case 'true-or-false':
+      return <QuestionTrueOrFalse question={question} />;
+    case 'odd-one-out':
+      return <QuestionOddOneOut question={question} />;
+    case 'finish-the-lyric':
+      return <QuestionFinishTheLyric question={question} />;
+    case 'connection':
+      return <QuestionConnection question={question} />;
     case 'simple':
     case 'four-options':
     case 'image-question':

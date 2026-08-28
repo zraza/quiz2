@@ -1,4 +1,4 @@
-export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options' | 'this-or-that' | 'order' | 'match';
+export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options' | 'this-or-that' | 'order' | 'match' | 'zoom-in' | 'blur-reveal' | 'true-or-false' | 'odd-one-out' | 'finish-the-lyric' | 'connection';
 
 /**
  * Speed controls how fast animations play.
@@ -22,6 +22,12 @@ export const DEFAULT_SPEEDS: Record<QuestionType, Speed> = {
   'this-or-that': 'fast',        // binary choice, snappy
   'order': 'normal',             // need time to think about sequence
   'match': 'normal',             // need time to match pairs
+  'zoom-in': 'slow',            // image reveals slowly, need time to guess
+  'blur-reveal': 'slow',        // same — gradual reveal
+  'true-or-false': 'fast',      // binary, snappy
+  'odd-one-out': 'normal',      // need to compare 4 items
+  'finish-the-lyric': 'slow',   // listen + remember
+  'connection': 'slow',         // requires lateral thinking
 };
 
 /** Speed multipliers for animation timings */
@@ -144,7 +150,61 @@ export interface MatchQ extends BaseQuestion {
   correctOrder: number[];
 }
 
-export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ | ThisOrThatQ | OrderQ | MatchQ;
+export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ | ThisOrThatQ | OrderQ | MatchQ | ZoomInQ | BlurRevealQ | TrueOrFalseQ | OddOneOutQ | FinishTheLyricQ | ConnectionQ;
+
+/** Zoom-in: image starts super zoomed, slowly pulls out. Guess what it is. */
+export interface ZoomInQ extends BaseQuestion {
+  type: 'zoom-in';
+  imageUrl: string;
+  options: string[];
+}
+
+/** Blur-reveal: image starts blurry, gradually sharpens. */
+export interface BlurRevealQ extends BaseQuestion {
+  type: 'blur-reveal';
+  imageUrl: string;
+  options: string[];
+}
+
+/** True-or-false: statement shown, pick TRUE or FALSE. */
+export interface TrueOrFalseQ extends BaseQuestion {
+  type: 'true-or-false';
+  statement: string;
+  /** 'true' or 'false' */
+  correctAnswer: 'true' | 'false';
+}
+
+/** Odd-one-out: 4 items, one doesn't belong. */
+export interface OddOneOutQ extends BaseQuestion {
+  type: 'odd-one-out';
+  items: { label: string; image?: string }[];
+  /** Index of the odd one (0-3) */
+  oddIndex: number;
+  /** Why it's the odd one out */
+  explanation: string;
+}
+
+/** Finish-the-lyric: lyrics shown with a blank, audio plays then stops. */
+export interface FinishTheLyricQ extends BaseQuestion {
+  type: 'finish-the-lyric';
+  /** The lyrics with "___" where the blank is */
+  lyrics: string;
+  /** The missing word(s) */
+  missingWords: string;
+  /** Song title for reveal */
+  songTitle: string;
+  artist: string;
+  options: string[];
+}
+
+/** Connection: 4 items shown, guess what connects them. */
+export interface ConnectionQ extends BaseQuestion {
+  type: 'connection';
+  items: string[];
+  /** The connection/answer */
+  connection: string;
+  options: string[];
+}
 
 /** Get the speed config for a question (per-question override > type default) */
 export function getSpeedConfig(question: QuizQuestion) {

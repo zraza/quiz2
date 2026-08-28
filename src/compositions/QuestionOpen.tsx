@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Audio } from 'remotion';
 import { AutoText, FONT_QUESTION, FONT_OPTION } from '../components/AutoText';
 
 interface Props {

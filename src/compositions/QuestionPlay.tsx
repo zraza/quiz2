@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Video } from 'remotion';
+import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate, Video, Audio } from 'remotion';
 import { AutoText, OptionText, FONT_OPTION } from '../components/AutoText';
 import type { QuizQuestion } from '../types';
 import { getSpeedConfig } from '../types';
@@ -250,6 +250,12 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           </div>
         );
       })()}
+
+      {/* VOICEOVER */}
+      {question.voUrl && <Audio src={question.voUrl} startFrom={0} volume={1} />}
+      {question.voRevealUrl && isRevealing && (
+        <Audio src={question.voRevealUrl} startFrom={0} volume={1} />
+      )}
 
       {/* TIMER BAR — hidden during media phase */}
       {!isRevealing && !isMediaPhase && (

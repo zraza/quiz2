@@ -41,6 +41,10 @@ export interface BaseQuestion {
   correctAnswer: string;
   /** Override the default speed for this question type */
   speed?: Speed;
+  /** Voiceover audio URL — plays at start of question */
+  voUrl?: string;
+  /** Voiceover for the answer reveal */
+  voRevealUrl?: string;
   /** URL to video/audio to play before timer starts (mp4, mp3, etc.) */
   mediaUrl?: string;
   /** How long to play the media in seconds (max 20). Only used when mediaRole='clue'. */

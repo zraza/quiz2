@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, Sequence } from 'remotion';
+import { AbsoluteFill, Sequence, Audio } from 'remotion';
 import type { QuizVideoData, QuizQuestion } from '../types';
 import { Background } from '../components/Background';
 import { IntroScreen } from './IntroScreen';
@@ -86,6 +86,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         <Background color="#5BC0BE" />
         <IntroScreen title={data.title} questionCount={questions.length} />
       </AbsoluteFill>
+      <Audio src="/vo/intro.m4a" />
     </Sequence>
   );
   currentFrame += INTRO_DURATION;
@@ -111,6 +112,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
             <Background color="#E85D75" />
             <HalfwayScreen />
           </AbsoluteFill>
+          <Audio src="/vo/halfway.m4a" />
         </Sequence>
       );
       currentFrame += HALFWAY_DURATION;
@@ -131,12 +133,23 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
 
     // QUESTION
     const duration = getQuestionDuration(question);
+    const mediaDelay = (question.mediaRole || 'clue') === 'clue' ? Math.min(question.mediaDuration || 0, 20) * FPS : 0;
+    const revealStartFrame = mediaDelay + question.timeLimit * FPS;
+
     sequences.push(
       <Sequence key={question.id} from={currentFrame} durationInFrames={duration}>
         <AbsoluteFill>
           <Background color={bgColor} />
           {renderQuestion(question)}
         </AbsoluteFill>
+        {/* Question VO — plays at start */}
+        {question.voUrl && <Audio src={question.voUrl} volume={1} />}
+        {/* Reveal VO — plays when timer runs out */}
+        {question.voRevealUrl && (
+          <Sequence from={revealStartFrame}>
+            <Audio src={question.voRevealUrl} volume={1} />
+          </Sequence>
+        )}
       </Sequence>
     );
     currentFrame += duration;
@@ -149,6 +162,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         <Background color="#4CAF50" />
         <OutroScreen totalQuestions={questions.length} />
       </AbsoluteFill>
+      <Audio src="/vo/outro.m4a" />
     </Sequence>
   );
 

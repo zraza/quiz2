@@ -1,6 +1,18 @@
 import type { QuizVideoData } from './types';
 
-export const mockQuizData: QuizVideoData = {
+// Auto-add VO URLs based on question IDs
+function addVo(data: QuizVideoData): QuizVideoData {
+  return {
+    ...data,
+    questions: data.questions.map(q => ({
+      ...q,
+      voUrl: q.voUrl || `/vo/${q.id}.m4a`,
+      voRevealUrl: q.voRevealUrl || `/vo/${q.id}-reveal.m4a`,
+    })),
+  };
+}
+
+export const mockQuizData: QuizVideoData = addVo({
   title: "GENERAL KNOWLEDGE QUIZ",
   questions: [
     {
@@ -211,4 +223,4 @@ export const mockQuizData: QuizVideoData = {
       correctOrder: [2, 0, 1],
     },
   ],
-};
+});

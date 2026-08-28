@@ -11,6 +11,8 @@ import { QuestionImage } from './QuestionImage';
 import { QuestionAudio } from './QuestionAudio';
 import { QuestionImageOptions } from './QuestionImageOptions';
 import { QuestionThisOrThat } from './QuestionThisOrThat';
+import { QuestionOrder } from './QuestionOrder';
+import { QuestionMatch } from './QuestionMatch';
 import { HalfwayScreen } from './HalfwayScreen';
 import { OutroScreen } from './OutroScreen';
 
@@ -57,6 +59,10 @@ function renderQuestion(question: QuizQuestion): React.ReactNode {
       return <QuestionImageOptions question={question} />;
     case 'this-or-that':
       return <QuestionThisOrThat question={question} />;
+    case 'order':
+      return <QuestionOrder question={question} />;
+    case 'match':
+      return <QuestionMatch question={question} />;
     case 'simple':
     case 'four-options':
     case 'image-question':

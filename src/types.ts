@@ -1,4 +1,4 @@
-export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options' | 'this-or-that';
+export type QuestionType = 'simple' | 'four-options' | 'image-question' | 'video-question' | 'audio-question' | 'open' | 'image-open' | 'audio' | 'image-options' | 'this-or-that' | 'order' | 'match';
 
 /**
  * Speed controls how fast animations play.
@@ -20,6 +20,8 @@ export const DEFAULT_SPEEDS: Record<QuestionType, Speed> = {
   'audio': 'slow',               // listen carefully
   'image-options': 'normal',     // visual comparison is quick
   'this-or-that': 'fast',        // binary choice, snappy
+  'order': 'normal',             // need time to think about sequence
+  'match': 'normal',             // need time to match pairs
 };
 
 /** Speed multipliers for animation timings */
@@ -116,7 +118,27 @@ export interface ThisOrThatQ extends BaseQuestion {
   correctSide: 'A' | 'B';
 }
 
-export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ | ThisOrThatQ;
+/** Order: 4 items shown in shuffled order, slide into correct order on reveal. */
+export interface OrderQ extends BaseQuestion {
+  type: 'order';
+  /** Items in CORRECT order (index 0 = first/smallest/oldest) */
+  items: { label: string; image?: string }[];
+  /** The shuffled display order (indices into items array). e.g. [2,0,3,1] */
+  displayOrder: number[];
+}
+
+/** Match: 3 items on left, 3 on right. Right slides to correct position on reveal. */
+export interface MatchQ extends BaseQuestion {
+  type: 'match';
+  /** Left column items (fixed position) */
+  left: { label: string; image?: string }[];
+  /** Right column items — displayed in this order, which is WRONG */
+  right: { label: string; image?: string }[];
+  /** Correct mapping: correctOrder[i] = index in right[] that matches left[i] */
+  correctOrder: number[];
+}
+
+export type QuizQuestion = SimpleQuestion | FourOptionsQuestion | ImageQuestion | VideoQuestion | AudioQuestion | OpenQuestion | ImageOpenQuestion | AudioQ | ImageOptionsQ | ThisOrThatQ | OrderQ | MatchQ;
 
 /** Get the speed config for a question (per-question override > type default) */
 export function getSpeedConfig(question: QuizQuestion) {

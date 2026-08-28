@@ -39,7 +39,9 @@ export const QuestionPlay: React.FC<{ question: QuizQuestion }> = ({ question })
           : delayFrames > 0 && mediaRole === 'clue'
             ? interpolate(transitionFrame, [3, 12], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
             : 1;
-        const contentGap = isCluePhase ? 0 : interpolate(Math.min(transitionFrame, 10), [0, 10], [0, 60], { extrapolateRight: 'clamp' });
+        const contentGap = isCluePhase ? 0
+          : mediaRole === 'ambient' ? 60
+          : interpolate(Math.min(transitionFrame, 10), [0, 10], [0, 60], { extrapolateRight: 'clamp' });
 
         return (
           <div style={{

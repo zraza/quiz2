@@ -7,8 +7,8 @@ import { getSpeedConfig } from '../types';
 const ROW_COLORS = ['#E53935', '#1E88E5', '#43A047'];
 
 /**
- * QuestionMatch: Two columns, 3 rows. Left stays fixed, right slides to correct positions on reveal.
- * Great for: landmarks→countries, flags→capitals, faces→names
+ * QuestionMatch: Two columns, 3 rows. Left fixed, right slides to correct positions.
+ * Uses absolute pixel positioning so cards slide precisely without overlap.
  */
 export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
   const frame = useCurrentFrame();
@@ -21,6 +21,10 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
     ? interpolate(frame, [countdownFrames, countdownFrames + 25], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
     : 0;
 
+  const slideProgress = isRevealing
+    ? interpolate(frame, [countdownFrames + 5, countdownFrames + 22], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
+    : 0;
+
   const timerProgress = Math.max(0, Math.min(1, (countdownFrames - frame) / countdownFrames));
   const barColor = timerProgress > 0.5 ? '#4CAF50' : timerProgress > 0.2 ? '#FF9800' : '#F44336';
   const timerUrgent = timerProgress < 0.2 && !isRevealing;
@@ -31,18 +35,19 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
 
   const glowPulse = 0.3 + Math.sin(frame * 0.06) * 0.12;
   const rowCount = question.left.length;
-  const rowHeight = 100 / rowCount; // percentage
 
-  // For each right item at display position i, find where it needs to go
-  // correctOrder[targetRow] = currentDisplayIndex
-  // So if correctOrder = [2, 0, 1], it means:
-  //   left[0] matches right[2], left[1] matches right[0], left[2] matches right[1]
-  // We need the inverse: for display position dp, find target position
-  const targetPositions: number[] = [];
+  // Content area height: 1080 - 210(top) - 80(bottom) = 790
+  const contentHeight = 790;
+  const ROW_GAP = 24;
+  const rowHeight = (contentHeight - ROW_GAP * (rowCount - 1)) / rowCount;
+
+  // For each right item at display position dp, find its target row
+  // correctOrder[leftRow] = rightIndex that matches it
+  // So we need: for dp, which left row does right[dp] belong to?
+  const targetRowForDisplay: number[] = [];
   for (let dp = 0; dp < rowCount; dp++) {
-    // Find which left row this right[dp] should match
     const targetRow = question.correctOrder.indexOf(dp);
-    targetPositions.push(targetRow);
+    targetRowForDisplay.push(targetRow);
   }
 
   return (
@@ -52,8 +57,7 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
         position: 'absolute',
         top: 50, left: 100, right: 100,
         display: 'flex', alignItems: 'center',
-        opacity: titleOpacity,
-        transform: `translateY(${titleY}px)`,
+        opacity: titleOpacity, transform: `translateY(${titleY}px)`,
       }}>
         <div style={{
           flex: 1, background: 'rgba(255,255,255,0.95)', borderRadius: 24,
@@ -67,32 +71,28 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
         </div>
       </div>
 
-      {/* TWO COLUMNS */}
+      {/* CONTENT AREA */}
       <div style={{
         position: 'absolute',
         top: 210, left: 80, right: 80, bottom: 80,
-        display: 'flex',
-        gap: 40,
+        display: 'flex', gap: 50,
       }}>
-        {/* LEFT COLUMN — fixed */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {/* LEFT COLUMN — fixed positions */}
+        <div style={{ flex: 1, position: 'relative' }}>
           {question.left.map((item, i) => {
             const delay = spd.entryDelay + i * spd.entryGap;
             const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
             const entryScale = interpolate(s, [0, 1], [0.85, 1]);
             const entryOpacity = interpolate(s, [0, 1], [0, 1]);
             const cardSweep = ((frame * 1.2 + i * 50) % 220) - 60;
-
-            // Connection line appears on reveal
-            const lineOpacity = isRevealing
-              ? interpolate(revealProgress, [0.8, 1], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-              : 0;
+            const topY = i * (rowHeight + ROW_GAP);
 
             return (
               <div key={`left-${i}`} style={{
-                flex: 1, position: 'relative',
-                transform: `scale(${entryScale})`,
-                opacity: entryOpacity,
+                position: 'absolute',
+                left: 0, right: 0,
+                top: topY, height: rowHeight,
+                transform: `scale(${entryScale})`, opacity: entryOpacity,
               }}>
                 <div style={{
                   position: 'absolute', inset: 0,
@@ -103,70 +103,38 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
-                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, ${ROW_COLORS[i]}33, ${ROW_COLORS[i]}11)` }} />
+                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(160deg, ${ROW_COLORS[i]}33, ${ROW_COLORS[i]}11)`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <OptionText width={600} maxSize={44} minSize={22} color="#fff">{item.label}</OptionText>
+                    </div>
                   )}
                   {/* Light sweep */}
                   {!isRevealing && (
                     <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(115deg, transparent ${cardSweep - 30}%, rgba(255,255,255,0.25) ${cardSweep}%, rgba(255,255,255,0.35) ${cardSweep + 4}%, transparent ${cardSweep + 30}%)` }} />
                   )}
-                  {/* Bottom label */}
-                  <div style={{
-                    position: 'absolute', bottom: 0, left: 0, right: 0,
-                    padding: '30px 16px 16px',
-                    background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                    backdropFilter: 'blur(3px)',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  }}>
-                    <OptionText width={500} maxSize={38} minSize={18} color="#fff">
-                      {item.label}
-                    </OptionText>
-                  </div>
+                  {/* Label */}
+                  {item.image && (
+                    <div style={{
+                      position: 'absolute', bottom: 0, left: 0, right: 0,
+                      padding: '30px 16px 16px',
+                      background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
+                      backdropFilter: 'blur(3px)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    }}>
+                      <OptionText width={500} maxSize={36} minSize={18} color="#fff">{item.label}</OptionText>
+                    </div>
+                  )}
                   {/* Top shine */}
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, rgba(255,255,255,${0.3 + glowPulse * 0.3}), transparent)` }} />
-                  {/* Row color badge */}
-                  <div style={{
-                    position: 'absolute', top: 12, left: 12,
-                    width: 12, height: 12, borderRadius: '50%',
-                    background: ROW_COLORS[i],
-                    boxShadow: `0 0 8px ${ROW_COLORS[i]}`,
-                  }} />
+                  {/* Color dot */}
+                  <div style={{ position: 'absolute', top: 12, left: 12, width: 14, height: 14, borderRadius: '50%', background: ROW_COLORS[i], boxShadow: `0 0 8px ${ROW_COLORS[i]}` }} />
                 </div>
-                {/* Connection dot on right edge */}
-                {lineOpacity > 0 && (
-                  <div style={{
-                    position: 'absolute', right: -20, top: '50%', transform: 'translateY(-50%)',
-                    width: 16, height: 16, borderRadius: '50%',
-                    background: ROW_COLORS[i], opacity: lineOpacity,
-                    boxShadow: `0 0 10px ${ROW_COLORS[i]}`,
-                  }} />
-                )}
               </div>
             );
           })}
         </div>
 
-        {/* CENTER — connection lines on reveal */}
-        <div style={{ width: 40, position: 'relative' }}>
-          {isRevealing && revealProgress > 0.8 && question.left.map((_, i) => {
-            const rightIdx = question.correctOrder[i];
-            const lineColor = ROW_COLORS[i];
-            return (
-              <div key={`line-${i}`} style={{
-                position: 'absolute',
-                left: 0, right: 0,
-                top: `${(i + 0.5) * (100 / rowCount)}%`,
-                height: 3,
-                background: lineColor,
-                opacity: interpolate(revealProgress, [0.8, 1], [0, 0.6], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
-                boxShadow: `0 0 6px ${lineColor}`,
-                borderRadius: 2,
-              }} />
-            );
-          })}
-        </div>
-
-        {/* RIGHT COLUMN — slides on reveal */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 24, position: 'relative' }}>
+        {/* RIGHT COLUMN — slides on reveal using absolute positions */}
+        <div style={{ flex: 1, position: 'relative' }}>
           {question.right.map((item, displayPos) => {
             const delay = spd.entryDelay + (displayPos + rowCount) * spd.entryGap;
             const s = spring({ frame: Math.max(0, frame - delay), fps, config: { damping: spd.springDamping, stiffness: spd.springStiffness, mass: spd.mass } });
@@ -174,20 +142,20 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
             const entryOpacity = interpolate(s, [0, 1], [0, 1]);
             const cardSweep = ((frame * 1.2 + (displayPos + 3) * 50) % 220) - 60;
 
-            // Calculate slide offset on reveal
-            const targetRow = targetPositions[displayPos];
-            const slideOffset = isRevealing
-              ? interpolate(revealProgress, [0.1, 0.7], [0, (targetRow - displayPos) * (100 / rowCount + 24 / (rowCount - 1))], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' })
-              : 0;
+            // Slide from current row to target row
+            const startY = displayPos * (rowHeight + ROW_GAP);
+            const targetRow = targetRowForDisplay[displayPos];
+            const endY = targetRow * (rowHeight + ROW_GAP);
+            const currentY = startY + (endY - startY) * slideProgress;
 
-            // Matched = green glow on reveal
             const matchedColor = ROW_COLORS[targetRow];
 
             return (
               <div key={`right-${displayPos}`} style={{
-                flex: 1, position: 'relative',
-                transform: `scale(${entryScale}) translateY(${slideOffset}%)`,
-                opacity: entryOpacity,
+                position: 'absolute',
+                left: 0, right: 0,
+                top: currentY, height: rowHeight,
+                transform: `scale(${entryScale})`, opacity: entryOpacity,
               }}>
                 <div style={{
                   position: 'absolute', inset: 0,
@@ -198,23 +166,23 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                   boxShadow: isRevealing && revealProgress > 0.7
                     ? `0 6px 24px rgba(0,0,0,0.2), 0 0 15px ${matchedColor}44`
                     : `0 6px 24px rgba(0,0,0,0.2)`,
+                  background: 'rgba(20,20,40,0.8)',
                 }}>
                   {item.image ? (
                     <img src={item.image} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <div style={{
                       position: 'absolute', inset: 0,
-                      background: 'linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02))',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
-                      <OptionText width={500} maxSize={44} minSize={22} color="#fff">
+                      <OptionText width={600} maxSize={52} minSize={24} color="#fff">
                         {item.label}
                       </OptionText>
                     </div>
                   )}
                   {/* Light sweep */}
                   {!isRevealing && (
-                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(115deg, transparent ${cardSweep - 30}%, rgba(255,255,255,0.25) ${cardSweep}%, rgba(255,255,255,0.35) ${cardSweep + 4}%, transparent ${cardSweep + 30}%)` }} />
+                    <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(115deg, transparent ${cardSweep - 30}%, rgba(255,255,255,0.2) ${cardSweep}%, rgba(255,255,255,0.3) ${cardSweep + 4}%, transparent ${cardSweep + 30}%)` }} />
                   )}
                   {/* Label if has image */}
                   {item.image && (
@@ -222,12 +190,9 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                       position: 'absolute', bottom: 0, left: 0, right: 0,
                       padding: '30px 16px 16px',
                       background: 'linear-gradient(transparent, rgba(0,0,0,0.7))',
-                      backdropFilter: 'blur(3px)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                     }}>
-                      <OptionText width={500} maxSize={38} minSize={18} color="#fff">
-                        {item.label}
-                      </OptionText>
+                      <OptionText width={500} maxSize={36} minSize={18} color="#fff">{item.label}</OptionText>
                     </div>
                   )}
                   {/* Top shine */}
@@ -236,9 +201,8 @@ export const QuestionMatch: React.FC<{ question: MatchQ }> = ({ question }) => {
                   {isRevealing && revealProgress > 0.7 && (
                     <div style={{
                       position: 'absolute', top: 12, right: 12,
-                      width: 12, height: 12, borderRadius: '50%',
-                      background: matchedColor,
-                      boxShadow: `0 0 8px ${matchedColor}`,
+                      width: 14, height: 14, borderRadius: '50%',
+                      background: matchedColor, boxShadow: `0 0 8px ${matchedColor}`,
                       opacity: interpolate(revealProgress, [0.7, 1], [0, 1], { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }),
                     }} />
                   )}

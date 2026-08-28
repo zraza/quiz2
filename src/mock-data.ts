@@ -182,14 +182,13 @@ export const mockQuizData: QuizVideoData = {
       questionNumber: 15,
       totalQuestions: 16,
       timeLimit: 12,
-      correctAnswer: 'Moon Landing, Berlin Wall, World Wide Web, Euro Currency',
+      correctAnswer: 'Moon Landing, Berlin Wall, World Wide Web',
       items: [
         { label: 'Moon Landing (1969)', image: 'https://images.pexels.com/photos/47367/full-moon-moon-night-sky-47367.jpeg?auto=compress&cs=tinysrgb&w=600' },
         { label: 'Berlin Wall Falls (1989)', image: 'https://images.pexels.com/photos/1128307/pexels-photo-1128307.jpeg?auto=compress&cs=tinysrgb&w=600' },
         { label: 'World Wide Web (1991)', image: 'https://images.pexels.com/photos/1148820/pexels-photo-1148820.jpeg?auto=compress&cs=tinysrgb&w=600' },
-        { label: 'Euro Currency (2002)', image: 'https://images.pexels.com/photos/259249/pexels-photo-259249.jpeg?auto=compress&cs=tinysrgb&w=600' },
       ],
-      displayOrder: [2, 0, 3, 1],
+      displayOrder: [2, 0, 1],
     },
     {
       id: 'q16',

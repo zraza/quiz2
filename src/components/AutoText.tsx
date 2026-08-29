@@ -1,11 +1,11 @@
 import React from 'react';
-import { loadFont } from '@remotion/google-fonts/LuckiestGuy';
+import { loadFont } from '@remotion/google-fonts/Anton';
 import { loadFont as loadFredoka } from '@remotion/google-fonts/Fredoka';
 
-const luckiestGuy = loadFont();
+const anton = loadFont();
 const fredoka = loadFredoka();
 
-export const FONT_QUESTION = luckiestGuy.fontFamily;
+export const FONT_QUESTION = anton.fontFamily;
 export const FONT_OPTION = fredoka.fontFamily;
 
 /**
@@ -55,7 +55,7 @@ export const AutoText: React.FC<AutoTextProps> = ({
   const charCount = text.length;
 
   // Character width ratio (empirical for these fonts)
-  const charRatio = font === 'question' ? 0.58 : 0.52;
+  const charRatio = font === 'question' ? 0.48 : 0.52;
 
   // Calculate font size for single line
   let fontSize = width / (charCount * charRatio);
@@ -86,6 +86,8 @@ export const AutoText: React.FC<AutoTextProps> = ({
       textAlign: 'center',
       display: 'block',
       width: '100%',
+      textTransform: font === 'question' ? 'uppercase' : undefined,
+      letterSpacing: font === 'question' ? 1.5 : undefined,
       textShadow: shadow
         ? '4px 4px 0 rgba(0,0,0,0.3), 2px 2px 0 rgba(0,0,0,0.2)'
         : 'none',

@@ -38,7 +38,7 @@ export const QuestionCard: React.FC<Props> = ({ text, isRevealing = false, revea
         boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
         textAlign: 'center',
       }}>
-        <AutoText width={1300} maxSize={64} minSize={36} maxLines={2} color="#1a1a1a" shadow={false} fillLines={false}>
+        <AutoText width={1300} maxSize={96} minSize={44} maxLines={2} color="#1a1a1a" shadow={false} fillLines={false}>
           {text}
         </AutoText>
       </div>

@@ -23,8 +23,8 @@ export const QuestionCard: React.FC<Props> = ({ text, isRevealing = false, revea
     <div style={{
       position: 'absolute',
       top: 50,
-      left: 100,
-      right: 100,
+      left: 160,
+      right: 160,
       display: 'flex',
       alignItems: 'center',
       opacity: titleOpacity * revealFade,
@@ -34,11 +34,11 @@ export const QuestionCard: React.FC<Props> = ({ text, isRevealing = false, revea
         flex: 1,
         background: '#FFFFFF',
         borderRadius: 24,
-        padding: '28px 50px',
+        padding: '36px 70px',
         boxShadow: '0 10px 30px rgba(0,0,0,0.18)',
         textAlign: 'center',
       }}>
-        <AutoText width={1500} maxSize={200} minSize={64} maxLines={4} color="#1a1a1a" shadow={false}>
+        <AutoText width={1300} maxSize={200} minSize={64} maxLines={4} color="#1a1a1a" shadow={false}>
           {text}
         </AutoText>
       </div>

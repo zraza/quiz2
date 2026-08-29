@@ -56,8 +56,8 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
       <div style={{
         position: 'absolute',
         top: 60,
-        left: 60,
-        right: 60,
+        left: 140,
+        right: 140,
         bottom: 200,
         display: 'flex',
         flexDirection: 'column',
@@ -72,7 +72,7 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
           textAlign: 'center',
           padding: '0 20px',
         }}>
-          <AutoText width={1720} maxSize={280} minSize={80} maxLines={4} color="#fff">
+          <AutoText width={1500} maxSize={280} minSize={80} maxLines={4} color="#fff">
             {questionText}
           </AutoText>
         </div>

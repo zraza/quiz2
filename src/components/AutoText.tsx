@@ -41,9 +41,9 @@ interface AutoTextProps {
 export const AutoText: React.FC<AutoTextProps> = ({
   children,
   width = 1600,
-  maxSize = 160,
-  minSize = 48,
-  maxLines = 2,
+  maxSize = 320,
+  minSize = 80,
+  maxLines = 4,
   color = '#fff',
   font = 'question',
   shadow = true,
@@ -107,7 +107,7 @@ export const OptionText: React.FC<{
   minSize?: number;
   color?: string;
   style?: React.CSSProperties;
-}> = ({ children, width = 500, maxSize = 72, minSize = 32, color = '#1a1a1a', style = {} }) => {
+}> = ({ children, width = 500, maxSize = 144, minSize = 56, color = '#1a1a1a', style = {} }) => {
   const text = children;
   const charCount = text.length;
   const charRatio = 0.48;

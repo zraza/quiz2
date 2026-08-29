@@ -52,13 +52,13 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
 
   return (
     <AbsoluteFill>
-      {/* QUESTION TEXT — centered, fills the screen */}
+      {/* QUESTION TEXT — centered, fills 70% of screen */}
       <div style={{
         position: 'absolute',
-        top: 0,
-        left: 70,
-        right: 70,
-        bottom: 80,
+        top: 60,
+        left: 60,
+        right: 60,
+        bottom: 200,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -68,14 +68,11 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
         transform: `translateY(${questionY}px)`,
       }}>
         <div style={{
-          background: '#FFFFFF',
-          borderRadius: 28,
-          padding: '44px 70px',
-          boxShadow: '0 12px 40px rgba(0,0,0,0.2)',
-          width: '80%',
+          width: '100%',
           textAlign: 'center',
+          padding: '0 20px',
         }}>
-          <AutoText width={1400} maxSize={100} minSize={44} maxLines={2} color="#1a1a1a" shadow={false}>
+          <AutoText width={1720} maxSize={140} minSize={52} maxLines={3} color="#fff">
             {questionText}
           </AutoText>
         </div>

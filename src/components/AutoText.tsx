@@ -35,6 +35,8 @@ interface AutoTextProps {
   color?: string;
   font?: 'question' | 'option';
   shadow?: boolean;
+  /** If true (default), maximize font size using all lines. If false, try 1 line first. */
+  fillLines?: boolean;
   style?: React.CSSProperties;
 }
 
@@ -47,6 +49,7 @@ export const AutoText: React.FC<AutoTextProps> = ({
   color = '#fff',
   font = 'question',
   shadow = true,
+  fillLines = true,
   style = {},
 }) => {
   const text = children;
@@ -55,15 +58,31 @@ export const AutoText: React.FC<AutoTextProps> = ({
   // Character width ratio (empirical for Anton - condensed)
   const charRatio = 0.48;
 
-  // Try each line count from 1 to maxLines — pick biggest font that fits
-  let fontSize = minSize;
-  for (let lines = 1; lines <= maxLines; lines++) {
-    const charsPerLine = charCount / lines;
-    const candidate = width / (charsPerLine * charRatio);
-    if (candidate >= fontSize) {
-      fontSize = candidate;
+  let fontSize: number;
+
+  if (fillLines) {
+    // Maximize font size using all available lines
+    fontSize = minSize;
+    for (let lines = 1; lines <= maxLines; lines++) {
+      const charsPerLine = charCount / lines;
+      const candidate = width / (charsPerLine * charRatio);
+      if (candidate >= fontSize) {
+        fontSize = candidate;
+      }
+      if (fontSize >= maxSize) break;
     }
-    if (fontSize >= maxSize) break;
+  } else {
+    // Try 1 line first, only expand to more lines if below minSize
+    fontSize = width / (charCount * charRatio);
+    if (fontSize < minSize && maxLines >= 2) {
+      fontSize = width / ((charCount / 2) * charRatio);
+    }
+    if (fontSize < minSize && maxLines >= 3) {
+      fontSize = width / ((charCount / 3) * charRatio);
+    }
+    if (fontSize < minSize && maxLines >= 4) {
+      fontSize = width / ((charCount / 4) * charRatio);
+    }
   }
 
   // Final clamp

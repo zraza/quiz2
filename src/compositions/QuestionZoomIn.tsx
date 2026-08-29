@@ -145,7 +145,7 @@ export const QuestionZoomIn: React.FC<{ question: ZoomInQ }> = ({ question }) =>
           maxWidth: 1600,
           textAlign: 'center',
         }}>
-          <AutoText width={1500} maxSize={52} minSize={28} maxLines={2} color="#ffffff">
+          <AutoText width={1500} maxSize={72} minSize={36} maxLines={2} color="#ffffff">
             {question.questionText}
           </AutoText>
         </div>
@@ -291,7 +291,7 @@ export const QuestionZoomIn: React.FC<{ question: ZoomInQ }> = ({ question }) =>
               border: '2px solid rgba(255, 255, 255, 0.3)',
               boxShadow: '0 10px 60px rgba(0,0,0,0.8), 0 0 40px rgba(100, 180, 255, 0.2)',
             }}>
-              <AutoText width={1400} maxSize={96} minSize={44} maxLines={2} color="#ffffff">
+              <AutoText width={1400} maxSize={120} minSize={56} maxLines={2} color="#ffffff">
                 {question.correctAnswer}
               </AutoText>
             </div>

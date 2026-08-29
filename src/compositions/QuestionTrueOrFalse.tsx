@@ -64,7 +64,7 @@ export const QuestionTrueOrFalse: React.FC<{ question: TrueOrFalseQ }> = ({ ques
           textAlign: 'center',
           maxWidth: 1400,
         }}>
-          <AutoText width={1200} maxSize={80} minSize={36} maxLines={3} color="#1a1a1a" shadow={false}>
+          <AutoText width={1200} maxSize={100} minSize={44} maxLines={3} color="#1a1a1a" shadow={false}>
             {question.statement}
           </AutoText>
         </div>
@@ -105,7 +105,7 @@ export const QuestionTrueOrFalse: React.FC<{ question: TrueOrFalseQ }> = ({ ques
         }}>
           <span style={{ fontSize: 80, lineHeight: 1 }}>✓</span>
           <span style={{
-            fontSize: 64,
+            fontSize: 80,
             fontWeight: 900,
             color: '#fff',
             fontFamily: 'system-ui',
@@ -140,7 +140,7 @@ export const QuestionTrueOrFalse: React.FC<{ question: TrueOrFalseQ }> = ({ ques
         }}>
           <span style={{ fontSize: 80, lineHeight: 1 }}>✕</span>
           <span style={{
-            fontSize: 64,
+            fontSize: 80,
             fontWeight: 900,
             color: '#fff',
             fontFamily: 'system-ui',

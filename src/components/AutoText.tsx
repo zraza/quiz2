@@ -1,12 +1,10 @@
 import React from 'react';
 import { loadFont } from '@remotion/google-fonts/Anton';
-import { loadFont as loadFredoka } from '@remotion/google-fonts/Fredoka';
 
 const anton = loadFont();
-const fredoka = loadFredoka();
 
 export const FONT_QUESTION = anton.fontFamily;
-export const FONT_OPTION = fredoka.fontFamily;
+export const FONT_OPTION = anton.fontFamily;
 
 /**
  * AutoText: Text that fills its container as large as possible.
@@ -43,8 +41,8 @@ interface AutoTextProps {
 export const AutoText: React.FC<AutoTextProps> = ({
   children,
   width = 1600,
-  maxSize = 140,
-  minSize = 40,
+  maxSize = 160,
+  minSize = 48,
   maxLines = 2,
   color = '#fff',
   font = 'question',
@@ -54,8 +52,8 @@ export const AutoText: React.FC<AutoTextProps> = ({
   const text = children;
   const charCount = text.length;
 
-  // Character width ratio (empirical for these fonts)
-  const charRatio = font === 'question' ? 0.48 : 0.52;
+  // Character width ratio (empirical for Anton - condensed)
+  const charRatio = 0.48;
 
   // Calculate font size for single line
   let fontSize = width / (charCount * charRatio);
@@ -109,10 +107,10 @@ export const OptionText: React.FC<{
   minSize?: number;
   color?: string;
   style?: React.CSSProperties;
-}> = ({ children, width = 500, maxSize = 64, minSize = 28, color = '#1a1a1a', style = {} }) => {
+}> = ({ children, width = 500, maxSize = 72, minSize = 32, color = '#1a1a1a', style = {} }) => {
   const text = children;
   const charCount = text.length;
-  const charRatio = 0.52;
+  const charRatio = 0.48;
 
   let fontSize = width / (charCount * charRatio);
   fontSize = Math.max(minSize, Math.min(maxSize, fontSize));
@@ -120,10 +118,12 @@ export const OptionText: React.FC<{
   return (
     <span style={{
       fontSize,
-      fontWeight: 700,
+      fontWeight: 400,
       fontFamily: FONT_OPTION,
       color,
       lineHeight: 1.2,
+      textTransform: 'uppercase',
+      letterSpacing: 1,
       ...style,
     }}>
       {text}

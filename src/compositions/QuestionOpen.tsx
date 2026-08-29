@@ -72,7 +72,7 @@ export const QuestionOpen: React.FC<Props> = ({ questionNumber, questionText, ti
           textAlign: 'center',
           padding: '0 20px',
         }}>
-          <AutoText width={1720} maxSize={140} minSize={52} maxLines={3} color="#fff">
+          <AutoText width={1720} maxSize={140} minSize={52} maxLines={4} color="#fff">
             {questionText}
           </AutoText>
         </div>

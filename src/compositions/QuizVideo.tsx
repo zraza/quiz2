@@ -152,6 +152,7 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
           )}
         </AbsoluteFill>
         <Audio src={voPath(transText)} volume={1} />
+        <Audio src={staticFile('sfx/swoosh.mp3')} volume={0.12} />
       </Sequence>
     );
     currentFrame += TRANSITION_FRAMES;
@@ -170,9 +171,13 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         </AbsoluteFill>
         {/* Question VO — plays at start */}
         {question.voUrl && <Audio src={question.voUrl} volume={1} />}
-        {/* Tick-tock SFX — plays during countdown */}
-        <Sequence from={voDelay + mediaDelay} durationInFrames={question.timeLimit * FPS}>
+        {/* Tick-tock SFX — starts HALFWAY through countdown (builds urgency) */}
+        <Sequence from={voDelay + mediaDelay + Math.floor(question.timeLimit * FPS / 2)} durationInFrames={Math.ceil(question.timeLimit * FPS / 2)}>
           <Audio src={staticFile('sfx/ticktoc.mp3')} volume={0.06} />
+        </Sequence>
+        {/* Bell SFX — times up ding */}
+        <Sequence from={revealStartFrame - 2}>
+          <Audio src={staticFile('sfx/bell.mp3')} volume={0.08} />
         </Sequence>
         {/* Boom SFX — plays at reveal */}
         <Sequence from={revealStartFrame}>

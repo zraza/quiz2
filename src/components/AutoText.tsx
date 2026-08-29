@@ -55,17 +55,15 @@ export const AutoText: React.FC<AutoTextProps> = ({
   // Character width ratio (empirical for Anton - condensed)
   const charRatio = 0.48;
 
-  // Calculate font size for single line
-  let fontSize = width / (charCount * charRatio);
-
-  // If it's too big for max, cap it
-  fontSize = Math.min(fontSize, maxSize);
-
-  // If single-line doesn't fit at minSize, allow 2 lines
-  if (fontSize < minSize && maxLines >= 2) {
-    // Split across 2 lines: each line has ~half the chars
-    fontSize = width / ((charCount / 2) * charRatio);
-    fontSize = Math.min(fontSize, maxSize);
+  // Try each line count from 1 to maxLines — pick biggest font that fits
+  let fontSize = minSize;
+  for (let lines = 1; lines <= maxLines; lines++) {
+    const charsPerLine = charCount / lines;
+    const candidate = width / (charsPerLine * charRatio);
+    if (candidate >= fontSize) {
+      fontSize = candidate;
+    }
+    if (fontSize >= maxSize) break;
   }
 
   // Final clamp

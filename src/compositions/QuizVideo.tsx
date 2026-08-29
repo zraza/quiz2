@@ -1,5 +1,5 @@
 import React from 'react';
-import { AbsoluteFill, Sequence, Audio, interpolate, staticFile } from 'remotion';
+import { AbsoluteFill, Sequence, Audio, staticFile } from 'remotion';
 import type { QuizVideoData, QuizQuestion } from '../types';
 import { voPath } from '../vo';
 import { FPS, INTRO_FRAMES, GETREADY_FRAMES, TRANSITION_FRAMES, HALFWAY_FRAMES, OUTRO_FRAMES, REVEAL_SECONDS, MAX_MEDIA_SECONDS, BG_COLORS } from '../config';
@@ -170,15 +170,13 @@ export const QuizVideo: React.FC<{ data: QuizVideoData }> = ({ data }) => {
         </AbsoluteFill>
         {/* Question VO — plays at start */}
         {question.voUrl && <Audio src={question.voUrl} volume={1} />}
-        {/* Raiser SFX — plays during countdown, fades up */}
+        {/* Tick-tock SFX — plays during countdown */}
         <Sequence from={voDelay + mediaDelay} durationInFrames={question.timeLimit * FPS}>
-          <Audio src={staticFile('sfx/raiser.mp3')} volume={(f) =>
-            interpolate(f, [0, question.timeLimit * FPS * 0.3, question.timeLimit * FPS], [0.08, 0.2, 0.35], { extrapolateRight: 'clamp' })
-          } />
+          <Audio src={staticFile('sfx/ticktoc.mp3')} volume={0.06} />
         </Sequence>
-        {/* Impact SFX — plays at reveal */}
+        {/* Boom SFX — plays at reveal */}
         <Sequence from={revealStartFrame}>
-          <Audio src={staticFile('sfx/impact.mp3')} volume={0.7} />
+          <Audio src={staticFile('sfx/boom.mp3')} volume={0.5} />
         </Sequence>
         {/* Reveal VO — plays when timer runs out */}
         {question.voRevealUrl && (

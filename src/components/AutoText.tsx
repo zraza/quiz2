@@ -55,8 +55,8 @@ export const AutoText: React.FC<AutoTextProps> = ({
   const text = children;
   const charCount = text.length;
 
-  // Character width ratio (empirical for Anton - condensed)
-  const charRatio = 0.48;
+  // Character width ratio (empirical for Anton uppercase + letter-spacing)
+  const charRatio = 0.62;
 
   let fontSize: number;
 
@@ -127,7 +127,7 @@ export const OptionText: React.FC<{
 }> = ({ children, width = 500, maxSize = 72, minSize = 32, color = '#1a1a1a', style = {} }) => {
   const text = children;
   const charCount = text.length;
-  const charRatio = 0.48;
+  const charRatio = 0.62;
 
   let fontSize = width / (charCount * charRatio);
   fontSize = Math.max(minSize, Math.min(maxSize, fontSize));

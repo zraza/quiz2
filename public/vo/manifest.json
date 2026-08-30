@@ -384,10 +384,11 @@
     "path": "/vo/11f0b9a0e201.mp3"
   },
   "q19": {
-    "text": "True or false? The Great Wall of China is visible from space with the naked eye.",
-    "hash": "1499014ace2b",
-    "file": "1499014ace2b.mp3",
-    "path": "/vo/1499014ace2b.mp3"
+    "text": "True or false?",
+    "hash": "8eff9551135d",
+    "file": "8eff9551135d.mp3",
+    "path": "/vo/8eff9551135d.mp3",
+    "duration": 1.44
   },
   "q19-reveal": {
     "text": "The answer is false.",
@@ -402,10 +403,11 @@
     "path": "/vo/1d3e9f70b107.mp3"
   },
   "q20-reveal": {
-    "text": "The answer is Mercury.",
-    "hash": "876644331a51",
-    "file": "876644331a51.mp3",
-    "path": "/vo/876644331a51.mp3"
+    "text": "The odd one out is Mercury.",
+    "hash": "db00d9c3e508",
+    "file": "db00d9c3e508.mp3",
+    "path": "/vo/db00d9c3e508.mp3",
+    "duration": 2.17
   },
   "q21": {
     "text": "Finish the lyric!",
@@ -447,21 +449,18 @@
     "text": "Bonus round!",
     "hash": "1994318b3d85",
     "file": "1994318b3d85.mp3",
-    "path": "/vo/1994318b3d85.mp3",
-    "duration": 1.49
+    "path": "/vo/1994318b3d85.mp3"
   },
   "match-reveal": {
     "text": "Here are the correct matches.",
     "hash": "1958c851c613",
     "file": "1958c851c613.mp3",
-    "path": "/vo/1958c851c613.mp3",
-    "duration": 2.17
+    "path": "/vo/1958c851c613.mp3"
   },
   "order-reveal": {
     "text": "Here is the correct order.",
     "hash": "1e9f22149255",
     "file": "1e9f22149255.mp3",
-    "path": "/vo/1e9f22149255.mp3",
-    "duration": 1.83
+    "path": "/vo/1e9f22149255.mp3"
   }
 }
